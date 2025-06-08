@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Identify and Write Numbers</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .number-card {
+      display: inline-block;
+      margin: 10px;
+      background-color: #e0f7fa;
+      padding: 20px;
+      font-size: 2em;
+      border-radius: 10px;
+      width: 60px;
+      text-align: center;
+    }
+
+    .quiz-box {
+      margin-top: 40px;
+    }
+
+    input[type="text"] {
+      padding: 6px;
+      font-size: 1em;
+    }
+
+    button {
+      padding: 6px 12px;
+      font-size: 1em;
+      margin-left: 10px;
+    }
+
+    #feedback {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Identify and Write Numbers</h1>
+    <p>Recognize, match, and write numbers from 1 to 20.</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Numbers from 1 to 10</h2>
+      <div>
+        <div class="number-card">1</div>
+        <div class="number-card">2</div>
+        <div class="number-card">3</div>
+        <div class="number-card">4</div>
+        <div class="number-card">5</div>
+        <div class="number-card">6</div>
+        <div class="number-card">7</div>
+        <div class="number-card">8</div>
+        <div class="number-card">9</div>
+        <div class="number-card">10</div>
+      </div>
+    </section>
+
+    <section class="quiz-box">
+      <h2>Quick Practice</h2>
+      <p>What number is this: <strong><span id="quizWord">Four</span></strong>?</p>
+      <input type="text" id="userInput" placeholder="Type the number...">
+      <button onclick="checkAnswer()">Submit</button>
+      <p id="feedback"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 I Am Excellent In Learning</p>
+  </footer>
+
+  <script>
+    const quizWord = document.getElementById("quizWord");
+    const userInput = document.getElementById("userInput");
+    const feedback = document.getElementById("feedback");
+
+    const wordsToNumbers = {
+      "One": "1",
+      "Two": "2",
+      "Three": "3",
+      "Four": "4",
+      "Five": "5",
+      "Six": "6",
+      "Seven": "7",
+      "Eight": "8",
+      "Nine": "9",
+      "Ten": "10"
+    };
+
+    const words = Object.keys(wordsToNumbers);
+
+    function getRandomWord() {
+      return words[Math.floor(Math.random() * words.length)];
+    }
+
+    function checkAnswer() {
+      const currentWord = quizWord.innerText;
+      const correctAnswer = wordsToNumbers[currentWord];
+      const userAnswer = userInput.value.trim();
+
+      if (userAnswer === correctAnswer) {
+        feedback.innerText = "✅ Correct!";
+      } else {
+        feedback.innerText = "❌ Try again. It's " + correctAnswer + ".";
+      }
+
+      setTimeout(() => {
+        quizWord.innerText = getRandomWord();
+        userInput.value = "";
+        feedback.innerText = "";
+      }, 2000);
+    }
+
+    // Set first quiz word
+    quizWord.innerText = getRandomWord();
+  </script>
+</body>
+</html>

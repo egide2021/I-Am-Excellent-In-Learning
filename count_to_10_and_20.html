@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Count to 10 and 20</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .number-line {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .number {
+      background-color: #cceeff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 1.2em;
+    }
+
+    .quiz-box {
+      margin-top: 30px;
+    }
+
+    input[type="number"] {
+      padding: 5px;
+      font-size: 1em;
+    }
+
+    button {
+      padding: 6px 12px;
+      font-size: 1em;
+      margin-left: 10px;
+    }
+
+    #feedback {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Count to 10 and 20</h1>
+    <p>Let’s learn how to count numbers from 1 to 20!</p>
+  </header>
+
+  <main>
+    <section class="number-line">
+      <!-- Numbers from 1 to 20 -->
+      <div class="number">1</div>
+      <div class="number">2</div>
+      <div class="number">3</div>
+      <div class="number">4</div>
+      <div class="number">5</div>
+      <div class="number">6</div>
+      <div class="number">7</div>
+      <div class="number">8</div>
+      <div class="number">9</div>
+      <div class="number">10</div>
+      <div class="number">11</div>
+      <div class="number">12</div>
+      <div class="number">13</div>
+      <div class="number">14</div>
+      <div class="number">15</div>
+      <div class="number">16</div>
+      <div class="number">17</div>
+      <div class="number">18</div>
+      <div class="number">19</div>
+      <div class="number">20</div>
+    </section>
+
+    <section class="quiz-box">
+      <h2>Quick Quiz</h2>
+      <p>What number comes after <span id="quizNumber">5</span>?</p>
+      <input type="number" id="answer">
+      <button onclick="checkAnswer()">Submit</button>
+      <p id="feedback"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 I Am Excellent In Learning</p>
+  </footer>
+
+  <script>
+    const quizNumber = document.getElementById("quizNumber");
+    const feedback = document.getElementById("feedback");
+    const answerInput = document.getElementById("answer");
+
+    let currentNumber = 5;
+
+    function getRandomNumber() {
+      return Math.floor(Math.random() * 19) + 1; // 1 to 19
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(answerInput.value);
+      if (userAnswer === currentNumber + 1) {
+        feedback.innerText = "✅ Correct!";
+      } else {
+        feedback.innerText = "❌ Try again.";
+      }
+      setTimeout(() => {
+        currentNumber = getRandomNumber();
+        quizNumber.innerText = currentNumber;
+        answerInput.value = "";
+        feedback.innerText = "";
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

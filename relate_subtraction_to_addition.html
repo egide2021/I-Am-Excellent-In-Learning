@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Relate Subtraction to Addition</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4faff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 650px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 6px 12px;
+      margin-top: 10px;
+    }
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    ul {
+      text-align: left;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🔁 Relate Subtraction to Addition</h1>
+
+    <p><strong>Summary:</strong> Use addition to solve subtraction problems. If you know 5 + 3 = 8, then 8 − 5 = 3 and 8 − 3 = 5.</p>
+
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li>7 − 4 → What number plus 4 equals 7? → 3</li>
+      <li>9 − 6 → What number plus 6 equals 9? → 3</li>
+    </ul>
+
+    <div id="question"></div>
+
+    <label>Your Answer:</label><br />
+    <input type="number" id="answer" />
+    <button onclick="checkAnswer()">Submit</button>
+
+    <p id="feedback"></p>
+    <p id="score">Score: 0 / 100</p>
+  </div>
+
+  <script>
+    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    let total, known, answer;
+
+    function generateQuestion() {
+      answer = Math.floor(Math.random() * 6) + 2;  // 2 to 7
+      known = Math.floor(Math.random() * 4) + 1;   // 1 to 4
+      total = answer + known;
+
+      if (Math.random() < 0.5) {
+        document.getElementById("question").innerText = `What is ${total} − ${known}?`;
+      } else {
+        document.getElementById("question").innerText = `What is ${total} − ${answer}?`;
+        [answer, known] = [known, answer]; // flip roles
+      }
+
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      if (userAnswer === answer) {
+        score += 4;
+        currentQuestion++;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 All done!";
+      }
+    }
+
+    generateQuestion();
+  </script>
+
+</body>
+</html>

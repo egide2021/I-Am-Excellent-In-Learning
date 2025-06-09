@@ -2,102 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Use Doubles and Near Doubles</title>
   <style>
     body {
-      font-family: Arial;
-      background: #f0faff;
-      padding: 20px;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      font-family: Arial, sans-serif;
       text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
     }
-    input, button {
-      font-size: 18px;
-      padding: 6px 12px;
+
+    header {
+      background-color: #007acc;
+      color: white;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    input, select {
+      padding: 10px;
+      font-size: 16px;
       margin-top: 10px;
     }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007acc;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005f99;
+    }
+
+    canvas {
+      border: 1px solid #aaa;
+      background: #fff;
+      margin-top: 10px;
+    }
+
     #feedback {
       font-weight: bold;
-      margin-top: 10px;
     }
+
+    #score {
+      font-size: 18px;
+    }
+
     ul {
-      text-align: left;
-      display: inline-block;
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Use Doubles and Near Doubles</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Summary</h2>
+      <p>Doubles are when you add the same number twice (like 4 + 4). Near doubles are one more or less than a double (like 4 + 5).</p>
+    </section>
 
-  <div class="container">
-    <h1>🔁 Use Doubles and Near Doubles</h1>
+    <section>
+      <h2>Examples</h2>
+      <ul>
+        <li>4 + 4 = 8 (Double)</li>
+        <li>4 + 5 = 9 (Near double)</li>
+        <li>6 + 6 = 12 (Double)</li>
+        <li>6 + 5 = 11 (Near double)</li>
+      </ul>
+    </section>
 
-    <p><strong>Summary:</strong> Doubles are facts like 3 + 3. Near doubles are close to a double, like 3 + 4.</p>
+    <section>
+      <h2>Quiz: Doubles and Near Doubles</h2>
+      <p id="question">Loading...</p>
+      <input type="number" id="answer" placeholder="Your answer" />
+      <br />
+      <button onclick="checkAnswer()">Submit</button>
+      <p id="feedback"></p>
+      <p id="score">Score: 0</p>
+    </section>
 
-    <p><strong>Examples:</strong></p>
-    <ul>
-      <li><strong>Double:</strong> 5 + 5 = 10</li>
-      <li><strong>Near Double:</strong> 6 + 7 = 6 + 6 + 1 = 13</li>
-    </ul>
+    <hr />
 
-    <div id="question"></div>
+    <section>
+      <h2>✏️ Try It Yourself – Draw Your Workings</h2>
+      <canvas id="draw" width="600" height="300"></canvas><br />
+      <label for="color">Choose pencil color:</label>
+      <select id="color">
+        <option value="black">🖤 Black</option>
+        <option value="red">❤️ Red</option>
+        <option value="blue">🔝 Blue</option>
+        <option value="green">💚 Green</option>
+      </select>
+      <button onclick="clearCanvas()">🪜 Clear</button>
+    </section>
 
-    <label>Your Answer:</label><br />
-    <input type="number" id="answer" />
-    <button onclick="checkAnswer()">Submit</button>
+    <script>
+      let score = 0;
+      let current = 0;
+      let questions = [];
 
-    <p id="feedback"></p>
-    <p id="score">Score: 0 / 100</p>
-  </div>
-
-  <script>
-    let score = 0, totalQuestions = 25, currentQuestion = 0;
-    let num1, num2;
-
-    function generateQuestion() {
-      const useNearDouble = Math.random() < 0.5;
-      if (useNearDouble) {
-        num1 = Math.floor(Math.random() * 5) + 1; // 1 to 5
-        num2 = num1 + 1;
-      } else {
-        num1 = Math.floor(Math.random() * 6) + 1; // 1 to 6
-        num2 = num1;
+      function generateQuestions() {
+        const doubles = [1, 2, 3, 4, 5];
+        questions = [];
+        for (let i = 0; i < 20; i++) {
+          const base = doubles[Math.floor(Math.random() * doubles.length)];
+          const isNear = Math.random() < 0.5;
+          let num1 = base;
+          let num2 = isNear ? base + 1 : base;
+          questions.push({ num1, num2, answer: num1 + num2 });
+        }
+        showQuestion();
       }
 
-      document.getElementById("question").innerText = `What is ${num1} + ${num2}?`;
-      document.getElementById("answer").value = "";
-      document.getElementById("feedback").innerText = "";
-    }
-
-    function checkAnswer() {
-      const userAnswer = parseInt(document.getElementById("answer").value);
-      const correct = num1 + num2;
-      if (userAnswer === correct) {
-        score += 4;
-        currentQuestion++;
-        document.getElementById("feedback").innerText = "✅ Correct!";
-      } else {
-        document.getElementById("feedback").innerText = "❌ Try again!";
+      function showQuestion() {
+        if (current < questions.length) {
+          const q = questions[current];
+          document.getElementById("question").innerText = `What is ${q.num1} + ${q.num2}?`;
+          document.getElementById("answer").value = "";
+          document.getElementById("feedback").innerText = "";
+        } else {
+          document.getElementById("question").innerText = "🎉 Quiz completed!";
+          document.getElementById("feedback").innerText = `Final Score: ${score} out of ${questions.length}`;
+          document.getElementById("answer").style.display = "none";
+          document.querySelector("button").style.display = "none";
+        }
       }
 
-      document.getElementById("score").innerText = `Score: ${score} / 100`;
-
-      if (currentQuestion < totalQuestions) {
-        setTimeout(generateQuestion, 1000);
-      } else {
-        document.getElementById("feedback").innerText += " 🎉 All done!";
+      function checkAnswer() {
+        const user = parseInt(document.getElementById("answer").value);
+        const correct = questions[current].answer;
+        if (user === correct) {
+          score++;
+          document.getElementById("feedback").innerText = "✅ Correct!";
+        } else {
+          document.getElementById("feedback").innerText = `❌ Incorrect. Correct answer is: ${correct}`;
+        }
+        current++;
+        document.getElementById("score").innerText = `Score: ${score}`;
+        showQuestion();
       }
-    }
 
-    generateQuestion();
-  </script>
+      window.onload = generateQuestions;
 
+      // Drawing Canvas
+      const canvas = document.getElementById("draw");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+      canvas.addEventListener("mouseout", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (!drawing) return;
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+
+      function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    </script>
+  </main>
 </body>
 </html>

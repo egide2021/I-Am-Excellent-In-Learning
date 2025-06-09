@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 1 Math Review & Tests</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f8ff;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+    a {
+      color: #007acc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .section {
+      margin-top: 30px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .generator {
+      margin-top: 20px;
+    }
+    .generator button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #007acc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧮 Grade 1 Math: Summative Tests & Worksheet Generator</h1>
+
+  <div class="section">
+    <h2>📘 Strand-Based Summative Tests</h2>
+    <ul>
+      <li><a href="numbers_test.html" target="_blank">1. Numbers and Number Sense Test</a></li>
+      <li><a href="addition_subtraction_test.html" target="_blank">2. Addition and Subtraction Test</a></li>
+      <li><a href="measurement_test.html" target="_blank">3. Measurement and Data Test</a></li>
+      <li><a href="geometry_test.html" target="_blank">4. Geometry Test</a></li>
+      <li><a href="patterns_sorting_test.html" target="_blank">5. Patterns and Sorting Test</a></li>
+      <li><a href="reasoning_problem_test.html" target="_blank">6. Reasoning and Problem Solving Test</a></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>🎯 Final Grade 1 Math Test</h2>
+    <a href="grade1_final_test.html" target="_blank">📝 Take the Final Test Covering All Topics</a>
+  </div>
+
+  <div class="section generator">
+    <h2>📥 Worksheet Generator</h2>
+    <p>Select topics to include in your worksheet. You can print it or copy the questions into a document.</p>
+
+    <label><input type="checkbox" id="mixTopics" checked> Mix topics</label><br>
+    <label><input type="checkbox" id="includeAnswers"> Include answer key</label><br>
+    <button onclick="generateWorksheet()">🧾 Generate Worksheet</button>
+
+    <textarea id="worksheetOutput" placeholder="Your worksheet will appear here..."></textarea>
+  </div>
+
+  <script>
+    const questions = {
+      numbers: ["Count from 1 to 30.", "Write the number that comes before 12.", "Circle the largest number: 18, 14, 21."],
+      addition: ["What is 3 + 4?", "Add: 5 + 5.", "Show 6 + 2 using dots or circles."],
+      measurement: ["Which object is longer: pencil or eraser?", "Measure with blocks.", "What time is shown on the clock?"],
+      geometry: ["Draw a triangle.", "How many sides does a square have?", "Circle the 3D shape: cube, circle, square."],
+      patterns: ["What comes next: 🔴🔵🔴🔵?", "Create your own AB pattern.", "Sort shapes by color."],
+      reasoning: ["Which item does not belong: 🟢🟢🔴🟢?", "Draw a model for 4 + 3.", "Liam has 6 balloons and gives away 2. How many are left?"]
+    };
+
+    function generateWorksheet() {
+      let mix = document.getElementById("mixTopics").checked;
+      let includeAnswers = document.getElementById("includeAnswers").checked;
+      let output = "";
+      let used = [];
+      let allQuestions = Object.entries(questions);
+
+      if (mix) {
+        for (let [topic, qs] of allQuestions) {
+          const q = qs[Math.floor(Math.random() * qs.length)];
+          output += `- ${q}\n`;
+          if (includeAnswers) output += `  (Answer: ____)\n`;
+        }
+      } else {
+        for (let [topic, qs] of allQuestions) {
+          output += `\n📘 ${topic.charAt(0).toUpperCase() + topic.slice(1)}\n`;
+          for (let q of qs) {
+            output += `- ${q}\n`;
+            if (includeAnswers) output += `  (Answer: ____)\n`;
+          }
+        }
+      }
+
+      document.getElementById("worksheetOutput").value = output.trim();
+    }
+  </script>
+</body>
+</html>

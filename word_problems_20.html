@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solve Word Problems up to 20</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #007acc;
+      color: white;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 100px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007acc;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005f99;
+    }
+
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    #score {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Solve Word Problems (up to 20)</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Summary</h2>
+      <p>Word problems help us use math in real-life situations. To solve them, read the problem carefully, decide whether to add or subtract, and write a number sentence to find the answer.</p>
+    </section>
+
+    <section>
+      <h2>Worked Examples</h2>
+      <ul style="list-style: none; padding: 0;">
+        <li>📘 Liam has 7 apples. He buys 6 more. How many apples does he have now?<br>👉 7 + 6 = 13</li><br>
+        <li>📘 Emma had 15 stickers. She gave 4 to her friend. How many does she have left?<br>👉 15 - 4 = 11</li><br>
+        <li>📘 There are 8 red balloons and 9 blue balloons. How many balloons in total?<br>👉 8 + 9 = 17</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Quiz: Solve Each Word Problem</h2>
+      <p id="question">Loading question...</p>
+      <input type="number" id="answer" placeholder="Your answer">
+      <br>
+      <button onclick="checkAnswer()">Submit</button>
+      <p id="feedback"></p>
+      <p id="score">Score: 0</p>
+    </section>
+
+    <script>
+      const questions = [
+        { question: "Liam has 8 marbles. He finds 7 more. How many marbles does he have now?", answer: 15 },
+        { question: "Ava has 12 candies. She eats 3. How many are left?", answer: 9 },
+        { question: "There are 6 ducks in the pond. 5 more arrive. How many ducks now?", answer: 11 },
+        { question: "Mia had 14 pencils. She lost 6. How many left?", answer: 8 },
+        { question: "Tom has 10 oranges. He gives 4 away. How many does he have?", answer: 6 },
+        { question: "There are 9 blue balls and 6 red balls. How many balls in total?", answer: 15 },
+        { question: "James had 18 cookies. He ate 7. How many remain?", answer: 11 },
+        { question: "Ella sees 7 birds in a tree. Then 5 fly away. How many remain?", answer: 2 },
+        { question: "

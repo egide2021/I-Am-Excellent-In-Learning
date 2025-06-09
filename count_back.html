@@ -1,97 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Count Back</title>
+  <meta charset="UTF-8">
+  <title>Count Back - Subtraction</title>
   <style>
     body {
-      font-family: Arial;
-      background: #fff0f5;
+      font-family: Arial, sans-serif;
       padding: 20px;
+      background-color: #fef9e7;
     }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
+    h1 {
+      color: #e67e22;
     }
-    input, button {
-      font-size: 18px;
+    canvas {
+      border: 1px solid #000;
+      margin-top: 20px;
+      display: block;
+    }
+    button {
+      margin-top: 10px;
       padding: 6px 12px;
-      margin-top: 10px;
-    }
-    #feedback {
       font-weight: bold;
-      margin-top: 10px;
-    }
-    ul {
-      text-align: left;
-      display: inline-block;
     }
   </style>
 </head>
 <body>
+  <h1>Count Back</h1>
+  <p><strong>Summary:</strong> To subtract, we can count backward from the bigger number. Start at the first number and count back as many times as the second number.</p>
 
-  <div class="container">
-    <h1>🔙 Count Back</h1>
+  <h2>Examples:</h2>
+  <ul>
+    <li>To solve <code>9 - 3</code>: Start at 9 and count back 3 steps: 8, 7, 6 → the answer is 6.</li>
+    <li>To solve <code>7 - 2</code>: Start at 7 and count back 2 steps: 6, 5 → the answer is 5.</li>
+  </ul>
 
-    <p><strong>Summary:</strong> Use counting backward to subtract numbers. Start from the first number and count back the second number.</p>
+  <h2>Try It (Quiz):</h2>
+  <p id="question"></p>
+  <input type="number" id="answer" />
+  <button onclick="checkAnswer()">Submit</button>
+  <p id="feedback"></p>
 
-    <p><strong>Examples:</strong></p>
-    <ul>
-      <li>5 − 2 → Count back 2 steps: 5, 4, 3 → <em>Answer: 3</em></li>
-      <li>8 − 3 → 8, 7, 6, 5 → <em>Answer: 5</em></li>
-    </ul>
-
-    <div id="question"></div>
-
-    <label>Your Answer:</label><br />
-    <input type="number" id="answer" />
-    <button onclick="checkAnswer()">Submit</button>
-
-    <p id="feedback"></p>
-    <p id="score">Score: 0 / 100</p>
-  </div>
+  <h2>Drawing Space:</h2>
+  <p>Use the drawing space below to show your count back steps on a number line.</p>
+  <canvas id="canvas" width="400" height="200"></canvas>
+  <button onclick="clearCanvas()">Clear</button>
 
   <script>
-    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    // Quiz Logic
+    const questionElement = document.getElementById("question");
+    const answerElement = document.getElementById("answer");
+    const feedbackElement = document.getElementById("feedback");
     let num1, num2;
 
     function generateQuestion() {
       num1 = Math.floor(Math.random() * 6) + 5; // 5 to 10
-      num2 = Math.floor(Math.random() * 6);     // 0 to 5
-      if (num2 > num1) num2 = num1;             // ensure valid subtraction
-      document.getElementById("question").innerText = `What is ${num1} − ${num2}?`;
-      document.getElementById("answer").value = "";
-      document.getElementById("feedback").innerText = "";
+      num2 = Math.floor(Math.random() * 4) + 1; // 1 to 4
+      questionElement.textContent = `What is ${num1} - ${num2}?`;
+      feedbackElement.textContent = "";
+      answerElement.value = "";
     }
 
     function checkAnswer() {
-      const userAnswer = parseInt(document.getElementById("answer").value);
-      const correct = num1 - num2;
-      if (userAnswer === correct) {
-        score += 4;
-        currentQuestion++;
-        document.getElementById("feedback").innerText = "✅ Correct!";
+      const userAnswer = parseInt(answerElement.value);
+      if (userAnswer === num1 - num2) {
+        feedbackElement.textContent = "✅ Correct!";
       } else {
-        document.getElementById("feedback").innerText = "❌ Try again!";
+        feedbackElement.textContent = "❌ Try again.";
       }
-
-      document.getElementById("score").innerText = `Score: ${score} / 100`;
-
-      if (currentQuestion < totalQuestions) {
-        setTimeout(generateQuestion, 1000);
-      } else {
-        document.getElementById("feedback").innerText += " 🎉 All done!";
-      }
+      generateQuestion();
     }
 
     generateQuestion();
-  </script>
 
+    // Drawing Tool
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+  </script>
 </body>
 </html>

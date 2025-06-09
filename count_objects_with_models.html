@@ -3,88 +3,197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Count Objects and Represent Numbers</title>
+  <title>Count Objects and Represent Numbers with Models</title>
   <style>
     body {
-      font-family: Arial;
-      background: #f9faff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #007acc;
+      color: white;
       padding: 20px;
     }
-    h1 {
-      text-align: center;
-      color: #007acc;
+
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .object {
-      font-size: 30px;
-      display: inline-block;
-      margin: 4px;
+
+    section {
+      margin-bottom: 30px;
     }
-    #object-area {
-      margin: 10px 0;
+
+    input, select {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
     }
-    input, button {
-      font-size: 18px;
-      padding: 6px 12px;
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007acc;
+      color: white;
+      cursor: pointer;
     }
+
+    button:hover {
+      background-color: #005f99;
+    }
+
+    canvas {
+      border: 1px solid #aaa;
+      background: #fff;
+      margin-top: 10px;
+    }
+
     #feedback {
       font-weight: bold;
-      margin-top: 10px;
+    }
+
+    #score {
+      font-size: 18px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Count Objects and Represent Numbers with Models</h1>
+  </header>
 
-  <h1>🍎 Count Objects and Represent Numbers</h1>
+  <main>
+    <section>
+      <h2>Summary</h2>
+      <p>We count objects like blocks, dots, or pictures to find a number. We can also use models like ten frames, base ten blocks, and tally marks to show numbers.</p>
+    </section>
 
-  <p><strong>Summary:</strong> Count a group of objects and write how many you see. Practice matching numbers with real things.</p>
-  <p><strong>Example:</strong> 🍎🍎🍎🍎 → <em>Answer: 4</em></p>
+    <section>
+      <h2>Examples</h2>
+      <ul>
+        <li>🟩🟩🟩🟩🟩 → Count: 5</li>
+        <li>🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈 → Count: 10</li>
+        <li>Ten frame with 7 dots → Number: 7</li>
+        <li>2 rods (10s) + 3 cubes (1s) → Number: 23</li>
+      </ul>
+    </section>
 
-  <div id="object-area"></div>
+    <section>
+      <h2>Quiz: Count the Objects</h2>
+      <p id="question">Loading...</p>
+      <input type="number" id="answer" placeholder="Your answer">
+      <br>
+      <button onclick="checkAnswer()">Submit</button>
+      <p id="feedback"></p>
+      <p id="score">Score: 0</p>
+    </section>
 
-  <label>How many objects?</label><br />
-  <input type="number" id="answer" />
-  <button onclick="checkAnswer()">Submit</button>
+    <hr>
 
-  <p id="feedback"></p>
-  <p id="score">Score: 0 / 100</p>
+    <section>
+      <h2>✏️ Try It Yourself – Draw Your Workings</h2>
+      <canvas id="draw" width="600" height="300"></canvas><br>
+      <label for="color">Choose pencil color:</label>
+      <select id="color">
+        <option value="black">🖤 Black</option>
+        <option value="red">❤️ Red</option>
+        <option value="blue">💙 Blue</option>
+        <option value="green">💚 Green</option>
+      </select>
+      <button onclick="clearCanvas()">🧼 Clear</button>
+    </section>
 
-  <script>
-    let score = 0, totalQuestions = 25, currentQuestion = 0, correctAnswer;
+    <script>
+      const quizItems = [
+        { icons: "🍎🍎🍎", count: 3 },
+        { icons: "🧱🧱🧱🧱🧱", count: 5 },
+        { icons: "🖍️🖍️🖍️🖍️🖍️🖍️", count: 6 },
+        { icons: "🐠🐠🐠🐠", count: 4 },
+        { icons: "🌟🌟🌟🌟🌟🌟🌟🌟🌟", count: 9 },
+        { icons: "🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈", count: 10 },
+        { icons: "🐝🐝🐝🐝🐝🐝🐝", count: 7 },
+        { icons: "🍓🍓🍓🍓🍓", count: 5 },
+        { icons: "🐶🐶🐶", count: 3 },
+        { icons: "📦📦📦📦📦📦📦📦", count: 8 }
+      ];
 
-    function generateObjects() {
-      const count = Math.floor(Math.random() * 21); // 0–20
-      correctAnswer = count;
-      let objects = "";
-      for (let i = 0; i < count; i++) {
-        objects += "<span class='object'>🍎</span>";
+      let score = 0;
+      let current = 0;
+
+      function showQuestion() {
+        if (current < quizItems.length) {
+          document.getElementById("question").innerText = `How many? ${quizItems[current].icons}`;
+          document.getElementById("answer").value = "";
+          document.getElementById("feedback").innerText = "";
+        } else {
+          document.getElementById("question").innerText = "🎉 Quiz completed!";
+          document.getElementById("feedback").innerText = `Final Score: ${score} out of ${quizItems.length}`;
+          document.getElementById("answer").style.display = "none";
+          document.querySelector("button").style.display = "none";
+        }
       }
 
-      document.getElementById("object-area").innerHTML = objects || "<em>(no objects)</em>";
-      document.getElementById("answer").value = "";
-      document.getElementById("feedback").innerText = "";
-    }
-
-    function checkAnswer() {
-      const userAnswer = parseInt(document.getElementById("answer").value);
-      if (userAnswer === correctAnswer) {
-        score += 4;
-        currentQuestion++;
-        document.getElementById("feedback").innerText = "✅ Correct!";
-      } else {
-        document.getElementById("feedback").innerText = "❌ Try again!";
+      function checkAnswer() {
+        const user = parseInt(document.getElementById("answer").value);
+        const correct = quizItems[current].count;
+        if (user === correct) {
+          score++;
+          document.getElementById("feedback").innerText = "✅ Correct!";
+        } else {
+          document.getElementById("feedback").innerText = `❌ Incorrect. Correct answer is: ${correct}`;
+        }
+        current++;
+        document.getElementById("score").innerText = `Score: ${score}`;
+        showQuestion();
       }
 
-      document.getElementById("score").innerText = `Score: ${score} / 100`;
+      window.onload = showQuestion;
 
-      if (currentQuestion < totalQuestions) {
-        setTimeout(generateObjects, 1000);
-      } else {
-        document.getElementById("feedback").innerText += " 🎉 All done!";
+      const canvas = document.getElementById("draw");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+      canvas.addEventListener("mouseout", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (!drawing) return;
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+
+      function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
-    }
-
-    generateObjects();
-  </script>
-
+    </script>
+  </main>
 </body>
 </html>

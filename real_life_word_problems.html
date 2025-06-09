@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Real-Life Word Problems</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff6f6;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .problem {
+      background: #fff1f1;
+      padding: 15px;
+      margin: 15px 0;
+      border-left: 5px solid #cc4444;
+    }
+    canvas {
+      border: 1px solid #000;
+      margin-top: 10px;
+    }
+    button.audio {
+      margin-left: 10px;
+      background: #ddd;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💡 Practice Word Problems in Real-Life Situations
+    <button class="audio" onclick="speak('Let’s solve math problems about real life situations using addition and subtraction.')">🔊</button>
+  </h1>
+
+  <h2>📝 Summary:
+    <button class="audio" onclick="speak('We use math every day. Real-life problems help us think and solve using numbers.')">🔊</button>
+  </h2>
+  <p>We can solve real-life problems using what we know about adding and subtracting. Use pictures, numbers, or blocks to help!</p>
+
+  <h2>🔍 Example Problem:
+    <button class="audio" onclick="speak('Sarah has 3 apples. She buys 2 more. How many apples does she have now?')">🔊</button>
+  </h2>
+  <div class="problem">
+    Sarah has 3 apples. She buys 2 more apples.  
+    <br><strong>How many apples does she have in total?</strong>
+  </div>
+  <p>3 + 2 = 5 🍎</p>
+
+  <h2>🧠 Quiz:
+    <button class="audio" onclick="speak('Liam has 6 balloons. He gives away 2. How many balloons does he have now?')">🔊</button>
+  </h2>
+  <p>Liam has 6 balloons and gives away 2.</p>
+  <input type="number" id="word-answer" placeholder="Your answer">
+  <button onclick="checkWord()">Submit</button>
+  <p id="quiz-feedback"></p>
+
+  <h2>✏️ Draw to Show Your Thinking:
+    <button class="audio" onclick="speak('Use the pencil to draw balloons or use numbers to show your answer.')">🔊</button>
+  </h2>
+  <div class="canvas-tools">
+    <button onclick="changeTool('draw')">✏️ Pencil</button>
+    <button onclick="changeTool('erase')">🧽 Eraser</button>
+    <button onclick="clearCanvas()">🗑️ Clear</button>
+  </div>
+  <canvas id="drawingCanvas" width="300" height="300"></canvas>
+
+  <script>
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(msg);
+    }
+
+    function checkWord() {
+      const answer = parseInt(document.getElementById("word-answer").value);
+      const feedback = document.getElementById("quiz-feedback");
+      if (answer === 4) {
+        feedback.innerText = "✅ Correct! Liam has 4 balloons left.";
+        speak("Correct! Liam has 4 balloons left.");
+      } else {
+        feedback.innerText = "❌ Try again. Liam has 4 balloons left.";
+        speak("Oops. The correct answer is 4.");
+      }
+    }
+
+    const canvas = document.getElementById("drawingCanvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let tool = 'draw';
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mouseout", () => drawing = false);
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineWidth = tool === 'erase' ? 20 : 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = tool === 'erase' ? "#ffffff" : "#000000";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function changeTool(selectedTool) {
+      tool = selectedTool;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  </script>
+
+</body>
+</html>

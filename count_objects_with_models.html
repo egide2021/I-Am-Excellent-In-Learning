@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Count Objects and Represent Numbers</title>
+  <style>
+    body { font-family: Arial; background: #f9faff; padding: 20px; }
+    h1 { text-align: center; color: #007acc; }
+    .object { font-size: 30px; display: inline-block; margin: 4px; }
+    #object-area { margin: 10px 0; }
+    input, button { font-size: 18px; padding: 6px 12px; }
+    #feedback { font-weight: bold; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>🍎 Count Objects and Represent Numbers</h1>
+<p><strong>Learning Objective:</strong> Count objects in a group and write the number using digits (0–20).</p>
+
+<div id="object-area"></div>
+<label>How many objects?</label><br />
+<input type="number" id="answer" />
+<button onclick="checkAnswer()">Submit</button>
+
+<p id="feedback"></p>
+<p id="score">Score: 0 / 100</p>
+
+<script>
+let score = 0, totalQuestions = 25, currentQuestion = 0, correctAnswer;
+
+function generateObjects() {
+  const count = Math.floor(Math.random() * 21);
+  correctAnswer = count;
+  let objects = "";
+  for (let i = 0; i < count; i++) {
+    objects += "<span class='object'>🍎</span>";
+  }
+  document.getElementById("object-area").innerHTML = objects || "<em>(no objects)</em>";
+  document.getElementById("answer").value = "";
+  document.getElementById("feedback").innerText = "";
+}
+
+function checkAnswer() {
+  const userAnswer = parseInt(document.getElementById("answer").value);
+  if (userAnswer === correctAnswer) {
+    score += 4; currentQuestion++;
+    document.getElementById("feedback").innerText = "✅ Correct!";
+  } else {
+    document.getElementById("feedback").innerText = "❌ Try again!";
+  }
+  document.getElementById("score").innerText = `Score: ${score} / 100`;
+  if (currentQuestion < totalQuestions) setTimeout(generateObjects, 1000);
+  else document.getElementById("feedback").innerText += " 🎉 All done!";
+}
+generateObjects();
+</script>
+
+</body>
+</html>

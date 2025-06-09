@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Represent with Drawings and Equations</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #007acc;
+      color: white;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    img {
+      width: 120px;
+      margin-top: 10px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007acc;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005f99;
+    }
+
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    #score {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Represent Problems with Drawings and Equations</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Summary</h2>
+      <p>We can use drawings like dots, number bonds, or simple shapes to show a problem before writing the equation.</p>
+      <p>This helps us understand what’s happening in the story problem.</p>
+    </section>
+
+    <section>
+      <h2>Worked Examples</h2>
+      <ul style="list-style: none; padding: 0;">
+        <li>🟢🟢🟢 + 🟢🟢🟢🟢 = 7<br>Equation: 3 + 4 = 7</li><br>
+        <li>🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵 - 🔵🔵🔵 = 7<br>Equation: 10 - 3 = 7</li><br>
+        <li>🐠🐠 + 🐠🐠🐠 = 5<br>Equation: 2 + 3 = 5</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Quiz: What is the Equation?</h2>
+      <p id="question">Loading...</p>
+      <input type="text" id="answer" placeholder="Type your equation, e.g. 3 + 4 = 7">
+      <br>
+      <button onclick="checkAnswer()">Submit</button>
+      <p id="feedback"></p>
+      <p id="score">Score: 0</p>
+    </section>
+
+    <script>
+      const questions = [
+        { question: "🍎🍎🍎 + 🍎🍎🍎🍎 = ?", answer: "3 + 4 = 7" },
+        { question: "🔷🔷🔷🔷🔷 + 🔷🔷 = ?", answer: "5 + 2 = 7" },
+        { question: "🟠🟠🟠🟠🟠🟠 - 🟠🟠 = ?", answer: "6 - 2 = 4" },
+        { question: "🐶🐶 + 🐶🐶🐶🐶 = ?", answer: "2 + 4 = 6" },
+        { question: "🌟🌟🌟🌟🌟🌟🌟🌟 - 🌟🌟🌟🌟 = ?", answer: "8 - 4 = 4" }
+      ];
+
+      let current = 0;
+      let score = 0;
+
+      function showQuestion() {
+        if (current < questions.length) {
+          document.getElementById("question").innerText = questions[current].question;
+          document.getElementById("answer").value = "";
+          document.getElementById("feedback").innerText = "";
+        } else {
+          document.getElementById("question").innerText = "🎉 Quiz completed!";
+          document.getElementById("feedback").innerText = `Final Score: ${score} out of ${questions.length}`;
+          document.getElementById("answer").style.display = "none";
+          document.querySelector("button").style.display = "none";
+        }
+      }
+
+      function checkAnswer() {
+        const user = document.getElementById("answer").value.trim();
+        const correct = questions[current].answer;
+        if (user === correct) {
+          score++;
+          document.getElementById("feedback").innerText = "✅ Correct!";
+        } else {
+          document.getElementById("feedback").innerText = `❌ Incorrect. The correct answer is: ${correct}`;
+        }
+        current++;
+        document.getElementById("score").innerText = `Score: ${score}`;
+        showQuestion();
+      }
+
+      window.onload = showQuestion;
+    </script>
+  </main>
+</body>
+</html>

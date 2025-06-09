@@ -1,103 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Relate Subtraction to Addition</title>
   <style>
     body {
-      font-family: Arial;
-      background: #f4faff;
+      font-family: Arial, sans-serif;
       padding: 20px;
+      background-color: #f9f0ff;
     }
-    .container {
-      max-width: 650px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
+    h1 {
+      color: #8e44ad;
     }
-    input, button {
-      font-size: 18px;
+    canvas {
+      border: 1px solid #000;
+      margin-top: 20px;
+      display: block;
+    }
+    button {
+      margin-top: 10px;
       padding: 6px 12px;
-      margin-top: 10px;
-    }
-    #feedback {
       font-weight: bold;
-      margin-top: 10px;
-    }
-    ul {
-      text-align: left;
-      display: inline-block;
     }
   </style>
 </head>
 <body>
+  <h1>Relate Subtraction to Addition</h1>
+  <p><strong>Summary:</strong> Subtraction is the opposite of addition. If you know the addition fact, you can use it to find the subtraction fact.</p>
 
-  <div class="container">
-    <h1>🔁 Relate Subtraction to Addition</h1>
+  <h2>Examples:</h2>
+  <ul>
+    <li>If <code>4 + 3 = 7</code>, then <code>7 - 3 = 4</code> and <code>7 - 4 = 3</code></li>
+    <li>If <code>2 + 5 = 7</code>, then <code>7 - 5 = 2</code> and <code>7 - 2 = 5</code></li>
+  </ul>
 
-    <p><strong>Summary:</strong> Use addition to solve subtraction problems. If you know 5 + 3 = 8, then 8 − 5 = 3 and 8 − 3 = 5.</p>
+  <h2>Try It (Quiz):</h2>
+  <p id="question"></p>
+  <input type="number" id="answer" />
+  <button onclick="checkAnswer()">Submit</button>
+  <p id="feedback"></p>
 
-    <p><strong>Examples:</strong></p>
-    <ul>
-      <li>7 − 4 → What number plus 4 equals 7? → 3</li>
-      <li>9 − 6 → What number plus 6 equals 9? → 3</li>
-    </ul>
-
-    <div id="question"></div>
-
-    <label>Your Answer:</label><br />
-    <input type="number" id="answer" />
-    <button onclick="checkAnswer()">Submit</button>
-
-    <p id="feedback"></p>
-    <p id="score">Score: 0 / 100</p>
-  </div>
+  <h2>Drawing Space:</h2>
+  <p>Use this space to draw number bonds or addition sentences to help with subtraction.</p>
+  <canvas id="canvas" width="400" height="200"></canvas>
+  <button onclick="clearCanvas()">Clear</button>
 
   <script>
-    let score = 0, totalQuestions = 25, currentQuestion = 0;
-    let total, known, answer;
+    // Quiz Logic
+    const questionElement = document.getElementById("question");
+    const answerElement = document.getElementById("answer");
+    const feedbackElement = document.getElementById("feedback");
+    let a, b, total;
 
     function generateQuestion() {
-      answer = Math.floor(Math.random() * 6) + 2;  // 2 to 7
-      known = Math.floor(Math.random() * 4) + 1;   // 1 to 4
-      total = answer + known;
-
-      if (Math.random() < 0.5) {
-        document.getElementById("question").innerText = `What is ${total} − ${known}?`;
+      a = Math.floor(Math.random() * 4) + 2; // 2 to 5
+      b = Math.floor(Math.random() * 4) + 2; // 2 to 5
+      total = a + b;
+      const ask = Math.random() < 0.5 ? "a" : "b";
+      if (ask === "a") {
+        questionElement.textContent = `If ${a} + ${b} = ${total}, what is ${total} - ${b}?`;
+        questionElement.dataset.correct = a;
       } else {
-        document.getElementById("question").innerText = `What is ${total} − ${answer}?`;
-        [answer, known] = [known, answer]; // flip roles
+        questionElement.textContent = `If ${a} + ${b} = ${total}, what is ${total} - ${a}?`;
+        questionElement.dataset.correct = b;
       }
-
-      document.getElementById("answer").value = "";
-      document.getElementById("feedback").innerText = "";
+      feedbackElement.textContent = "";
+      answerElement.value = "";
     }
 
     function checkAnswer() {
-      const userAnswer = parseInt(document.getElementById("answer").value);
-      if (userAnswer === answer) {
-        score += 4;
-        currentQuestion++;
-        document.getElementById("feedback").innerText = "✅ Correct!";
+      const userAnswer = parseInt(answerElement.value);
+      const correct = parseInt(questionElement.dataset.correct);
+      if (userAnswer === correct) {
+        feedbackElement.textContent = "✅ Correct!";
       } else {
-        document.getElementById("feedback").innerText = "❌ Try again!";
+        feedbackElement.textContent = "❌ Try again.";
       }
-
-      document.getElementById("score").innerText = `Score: ${score} / 100`;
-
-      if (currentQuestion < totalQuestions) {
-        setTimeout(generateQuestion, 1000);
-      } else {
-        document.getElementById("feedback").innerText += " 🎉 All done!";
-      }
+      generateQuestion();
     }
 
     generateQuestion();
-  </script>
 
+    // Drawing Tool
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+  </script>
 </body>
 </html>

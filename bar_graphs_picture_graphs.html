@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bar Graphs and Picture Graphs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f9ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 750px;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+    }
+    h2, h3 { color: #007acc; }
+    .bar {
+      height: 30px;
+      margin: 5px 0;
+      background-color: #4CAF50;
+      text-align: right;
+      padding-right: 10px;
+      color: white;
+      line-height: 30px;
+    }
+    .color-picker button {
+      margin: 2px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    canvas {
+      border: 1px solid #000;
+      margin-top: 10px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Collect, Sort, and Represent Data</h2>
+
+  <h3>🔹 Summary</h3>
+  <p>We can collect and sort data, then show it using bar graphs or picture graphs.</p>
+  <button onclick="speak('We can collect and sort data, then show it using bar graphs or picture graphs.')">🔊 Play</button>
+
+  <h3>🔹 Example Data</h3>
+  <table border="1" style="margin: 0 auto;">
+    <tr><th>Student</th><th>Favorite Fruit</th></tr>
+    <tr><td>Alice</td><td>Apple</td></tr>
+    <tr><td>Ben</td><td>Banana</td></tr>
+    <tr><td>Chloe</td><td>Grapes</td></tr>
+    <tr><td>David</td><td>Apple</td></tr>
+    <tr><td>Eva</td><td>Banana</td></tr>
+  </table>
+
+  <h3>🔹 Bar Graph</h3>
+  <div class="bar" style="width: 60%;">Apple (2)</div>
+  <div class="bar" style="width: 60%;">Banana (2)</div>
+  <div class="bar" style="width: 30%;">Grapes (1)</div>
+
+  <h3>🔹 Picture Graph</h3>
+  <p>🍎🍎 (Apple)</p>
+  <p>🍌🍌 (Banana)</p>
+  <p>🍇 (Grapes)</p>
+
+  <h3>🔹 Quiz</h3>
+  <p id="question"></p>
+  <input type="text" id="answer">
+  <button onclick="checkAnswer()">Submit</button>
+  <p id="feedback"></p>
+  <p id="score">Score: 0 / 100</p>
+
+  <h3>🔹 Drawing Space</h3>
+  <div class="color-picker">
+    <button style="background:red" onclick="setColor('red')"></button>
+    <button style="background:blue" onclick="setColor('blue')"></button>
+    <button style="background:green" onclick="setColor('green')"></button>
+    <button style="background:black" onclick="setColor('black')"></button>
+  </div>
+  <canvas id="drawCanvas" width="400" height="200"></canvas>
+</div>
+
+<script>
+  function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(msg);
+  }
+
+  const canvas = document.getElementById("drawCanvas");
+  const ctx = canvas.getContext("2d");
+  let drawing = false;
+  let currentColor = "black";
+
+  canvas.addEventListener("mousedown", () => drawing = true);
+  canvas.addEventListener("mouseup", () => {
+    drawing = false;
+    ctx.beginPath();
+  });
+  canvas.addEventListener("mousemove", draw);
+
+  function draw(e) {
+    if (!drawing) return;
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+  }
+
+  function setColor(color) {
+    currentColor = color;
+    ctx.beginPath();
+  }
+
+  let score = 0;
+  let currentQuestion = 0;
+  const totalQuestions = 5;
+  const quizData = [
+    { q: "How many students chose apples?", a: "2" },
+    { q: "Which fruit was chosen by the fewest students?", a: "grapes" },
+    { q: "How many students chose bananas?", a: "2" },
+    { q: "Which fruits were chosen by more than one student?", a: "apple, banana" },
+    { q: "How many total students were surveyed?", a: "5" }
+  ];
+
+  function generateQuestion() {
+    document.getElementById("question").innerText = quizData[currentQuestion].q;
+    document.getElementById("answer").value = "";
+    document.getElementById("feedback").innerText = "";
+  }
+
+  function checkAnswer() {
+    const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+    const correctAnswer = quizData[currentQuestion].a.toLowerCase();
+    if (userAnswer === correctAnswer) {
+      score++;
+      document.getElementById("feedback").innerText = "✅ Correct!";
+    } else {
+      document.getElementById("feedback").innerText = `❌ Incorrect. The correct answer is ${quizData[currentQuestion].a}`;
+    }
+    currentQuestion++;
+    if (currentQuestion < totalQuestions) {
+      generateQuestion();
+    } else {
+      const finalScore = Math.round((score / totalQuestions) * 100);
+      document.getElementById("question").innerText = "Quiz Finished!";
+      document.getElementById("score").innerText = `Final Score: ${finalScore} / 100`;
+    }
+  }
+
+  generateQuestion();
+</script>
+</body>
+</html>

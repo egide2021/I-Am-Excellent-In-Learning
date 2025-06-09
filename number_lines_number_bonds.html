@@ -1,106 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Use Number Lines and Number Bonds</title>
+  <meta charset="UTF-8">
+  <title>Use Number Lines and Number Bonds - Subtraction</title>
   <style>
     body {
-      font-family: Arial;
-      background: #fff9f0;
+      font-family: Arial, sans-serif;
       padding: 20px;
+      background-color: #f0f8ff;
     }
-    .container {
-      max-width: 650px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      text-align: center;
+    h1 {
+      color: #007acc;
     }
-    input, button {
-      font-size: 18px;
+    canvas {
+      border: 1px solid #000;
+      margin-top: 20px;
+      display: block;
+    }
+    button {
+      margin-top: 10px;
       padding: 6px 12px;
-      margin-top: 10px;
-    }
-    #feedback {
       font-weight: bold;
-      margin-top: 10px;
-    }
-    ul {
-      text-align: left;
-      display: inline-block;
-    }
-    .line {
-      font-family: monospace;
-      white-space: pre;
-      overflow-x: auto;
     }
   </style>
 </head>
 <body>
+  <h1>Use Number Lines and Number Bonds</h1>
+  <p><strong>Summary:</strong> We can subtract numbers by using number lines (jumping back) or by breaking numbers into parts (number bonds).</p>
 
-  <div class="container">
-    <h1>📏 Use Number Lines and Number Bonds</h1>
+  <h2>Examples:</h2>
+  <ul>
+    <li><strong>Number Line:</strong> To solve <code>7 - 3</code>, start at 7 and jump back 3 steps. You land on 4.</li>
+    <li><strong>Number Bond:</strong> To solve <code>8 - 2</code>, think of 8 as 6 + 2. So 8 - 2 = 6.</li>
+  </ul>
 
-    <p><strong>Summary:</strong> Use number lines to count steps, and number bonds to break numbers into parts to help with addition.</p>
+  <h2>Try It (Quiz):</h2>
+  <p id="question"></p>
+  <input type="number" id="answer" />
+  <button onclick="checkAnswer()">Submit</button>
+  <p id="feedback"></p>
 
-    <p><strong>Examples:</strong></p>
-    <ul>
-      <li><strong>Number Line:</strong> 3 + 2 → Start at 3, jump 2 steps → <em>Answer: 5</em></li>
-      <li><strong>Number Bond:</strong> 4 + 5 → Break 5 into 1 + 4 → (4 + 4) + 1 = 9</li>
-    </ul>
-
-    <div class="line">
-      Number Line (0 to 20):<br />
-      0‒1‒2‒3‒4‒5‒6‒7‒8‒9‒10‒11‒12‒13‒14‒15‒16‒17‒18‒19‒20
-    </div>
-
-    <div id="question"></div>
-
-    <label>Your Answer:</label><br />
-    <input type="number" id="answer" />
-    <button onclick="checkAnswer()">Submit</button>
-
-    <p id="feedback"></p>
-    <p id="score">Score: 0 / 100</p>
-  </div>
+  <h2>Drawing Space:</h2>
+  <p>Use the pencil below to show your work using number lines or number bonds.</p>
+  <canvas id="canvas" width="400" height="200"></canvas>
+  <button onclick="clearCanvas()">Clear</button>
 
   <script>
-    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    // Quiz Logic
+    const questionElement = document.getElementById("question");
+    const answerElement = document.getElementById("answer");
+    const feedbackElement = document.getElementById("feedback");
     let num1, num2;
 
     function generateQuestion() {
-      num1 = Math.floor(Math.random() * 11); // 0–10
-      num2 = Math.floor(Math.random() * (10 - num1 + 1)); // keep sum ≤ 10
-      document.getElementById("question").innerText = `What is ${num1} + ${num2}?`;
-      document.getElementById("answer").value = "";
-      document.getElementById("feedback").innerText = "";
+      num1 = Math.floor(Math.random() * 6) + 5; // 5 to 10
+      num2 = Math.floor(Math.random() * 5) + 1; // 1 to 5
+      questionElement.textContent = `What is ${num1} - ${num2}?`;
+      feedbackElement.textContent = "";
+      answerElement.value = "";
     }
 
     function checkAnswer() {
-      const userAnswer = parseInt(document.getElementById("answer").value);
-      const correct = num1 + num2;
-      if (userAnswer === correct) {
-        score += 4;
-        currentQuestion++;
-        document.getElementById("feedback").innerText = "✅ Correct!";
+      const userAnswer = parseInt(answerElement.value);
+      if (userAnswer === num1 - num2) {
+        feedbackElement.textContent = "✅ Correct!";
       } else {
-        document.getElementById("feedback").innerText = "❌ Try again!";
+        feedbackElement.textContent = "❌ Try again.";
       }
-
-      document.getElementById("score").innerText = `Score: ${score} / 100`;
-
-      if (currentQuestion < totalQuestions) {
-        setTimeout(generateQuestion, 1000);
-      } else {
-        document.getElementById("feedback").innerText += " 🎉 You finished!";
-      }
+      generateQuestion();
     }
 
     generateQuestion();
-  </script>
 
+    // Drawing Tool
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluency Within 20</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f9f0ff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 6px 12px;
+      margin-top: 10px;
+    }
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    ul {
+      text-align: left;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🧠 Fluency Within 20: Add and Subtract Using Strategies</h1>
+
+    <p><strong>Summary:</strong> Use strategies like counting on, making ten, and doubles to add or subtract numbers within 20.</p>
+
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li>8 + 6 → Think 8 + 2 = 10, then 10 + 4 = 14</li>
+      <li>13 − 6 → Count back: 13 − 3 = 10, then −3 more = 7</li>
+      <li>9 + 9 → Use doubles → 18</li>
+    </ul>
+
+    <div id="question" style="margin-top: 20px;"></div>
+
+    <label>Your Answer:</label><br />
+    <input type="number" id="answer" />
+    <button onclick="checkAnswer()">Submit</button>
+
+    <p id="feedback"></p>
+    <p id="score">Score: 0 / 100</p>
+  </div>
+
+  <script>
+    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    let num1, num2, isAddition;
+
+    function generateQuestion() {
+      num1 = Math.floor(Math.random() * 21);
+      num2 = Math.floor(Math.random() * 21);
+      isAddition = Math.random() < 0.5;
+
+      if (!isAddition && num2 > num1) [num1, num2] = [num2, num1];
+
+      const symbol = isAddition ? '+' : '−';
+      document.getElementById("question").innerText = `What is ${num1} ${symbol} ${num2}?`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      const correctAnswer = isAddition ? num1 + num2 : num1 - num2;
+
+      if (userAnswer === correctAnswer) {
+        score += 4;
+        currentQuestion++;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 All done!";
+      }
+    }
+
+    generateQuestion();
+  </script>
+
+</body>
+</html>

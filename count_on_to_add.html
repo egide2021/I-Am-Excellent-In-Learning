@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Count On to Add</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f0f9ff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 6px 12px;
+      margin-top: 10px;
+    }
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    ul {
+      text-align: left;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🔼 Count On to Add</h1>
+
+    <p><strong>Summary:</strong> Start with one number, then count up to add. This is great when one number is small.</p>
+
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li>Start at 6, count on 2 → <em>6, 7, 8 → Answer: 8</em></li>
+      <li>Start at 4, count on 3 → <em>4, 5, 6, 7 → Answer: 7</em></li>
+    </ul>
+
+    <div id="question"></div>
+
+    <label>Your Answer:</label><br />
+    <input type="number" id="answer" />
+    <button onclick="checkAnswer()">Submit</button>
+
+    <p id="feedback"></p>
+    <p id="score">Score: 0 / 100</p>
+  </div>
+
+  <script>
+    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    let start, count;
+
+    function generateQuestion() {
+      start = Math.floor(Math.random() * 6) + 1; // 1 to 6
+      count = Math.floor(Math.random() * 4) + 1; // 1 to 4
+      document.getElementById("question").innerText = `Start at ${start}, count on ${count}`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      const correct = start + count;
+      if (userAnswer === correct) {
+        score += 4;
+        currentQuestion++;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 All done!";
+      }
+    }
+
+    generateQuestion();
+  </script>
+
+</body>
+</html>

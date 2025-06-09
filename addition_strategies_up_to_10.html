@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Addition Strategies up to 10</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f9faff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #007acc;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 6px 12px;
+      margin-top: 10px;
+    }
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    ul {
+      text-align: left;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>➕ Addition Strategies up to 10</h1>
+
+    <p><strong>Summary:</strong> Learn different ways to add numbers quickly and easily. Use strategies like counting on, doubles, and adding in any order.</p>
+
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li><strong>Count on:</strong> 3 + 2 → start at 3, count on 2 → <em>Answer: 5</em></li>
+      <li><strong>Doubles:</strong> 4 + 4 → <em>Answer: 8</em></li>
+      <li><strong>Add in any order:</strong> 2 + 5 is the same as 5 + 2 → <em>Answer: 7</em></li>
+    </ul>
+
+    <div id="question"></div>
+
+    <label>What is the sum?</label><br />
+    <input type="number" id="answer" />
+    <button onclick="checkAnswer()">Submit</button>
+
+    <p id="feedback"></p>
+    <p id="score">Score: 0 / 100</p>
+  </div>
+
+  <script>
+    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    let num1, num2;
+
+    function generateQuestion() {
+      num1 = Math.floor(Math.random() * 6) + 1;  // 1 to 6
+      num2 = Math.floor(Math.random() * (10 - num1 + 1)); // sum stays ≤ 10
+      document.getElementById("question").innerText = `What is ${num1} + ${num2}?`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      if (userAnswer === num1 + num2) {
+        currentQuestion++;
+        score += 4;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 You finished all questions!";
+      }
+    }
+
+    generateQuestion();
+  </script>
+
+</body>
+</html>

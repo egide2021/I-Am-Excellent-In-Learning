@@ -5,59 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Place Value: Tens and Ones</title>
   <style>
-    body { font-family: Arial; background: #f9faff; padding: 20px; }
-    h1 { text-align: center; color: #007acc; }
-    input, button { font-size: 18px; padding: 6px 12px; }
-    #feedback { font-weight: bold; margin-top: 10px; }
+    body {
+      font-family: Arial;
+      background: #f9faff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #007acc;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 6px 12px;
+    }
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
-<h1>🔢 Understand Place Value (Tens and Ones)</h1>
-<p><strong>Learning Objective:</strong> Understand how two-digit numbers are made of tens and ones, and represent them with models.</p>
+  <h1>🔢 Understand Place Value (Tens and Ones)</h1>
 
-<div id="question"></div>
-<label>What number is shown?</label><br />
-<input type="number" id="answer" />
-<button onclick="checkAnswer()">Submit</button>
+  <p><strong>Summary:</strong> Break apart numbers into tens and ones to understand how they are built. For example, the number 42 is made of 4 tens and 2 ones.</p>
 
-<p id="feedback"></p>
-<p id="score">Score: 0 / 100</p>
+  <p><strong>Examples:</strong></p>
+  <ul>
+    <li>🟦 4 tens and 🟨 2 ones → <em>Answer: 42</em></li>
+    <li>🟦 7 tens and 🟨 9 ones → <em>Answer: 79</em></li>
+    <li>🟦 1 ten and 🟨 3 ones → <em>Answer: 13</em></li>
+  </ul>
 
-<script>
-let score = 0, totalQuestions = 25, currentQuestion = 0, correctAnswer;
+  <div id="question"></div>
 
-function generateQuestion() {
-  const tens = Math.floor(Math.random() * 10);
-  const ones = Math.floor(Math.random() * 10);
-  correctAnswer = tens * 10 + ones;
+  <label>What number is shown?</label><br />
+  <input type="number" id="answer" />
+  <button onclick="checkAnswer()">Submit</button>
 
-  document.getElementById("question").innerText =
-    `🟦 ${tens} tens and 🟨 ${ones} ones`;
-  document.getElementById("answer").value = "";
-  document.getElementById("feedback").innerText = "";
-}
+  <p id="feedback"></p>
+  <p id="score">Score: 0 / 100</p>
 
-function checkAnswer() {
-  const userAnswer = parseInt(document.getElementById("answer").value);
-  if (userAnswer === correctAnswer) {
-    currentQuestion++; score += 4;
-    document.getElementById("feedback").innerText = "✅ Correct!";
-  } else {
-    document.getElementById("feedback").innerText = "❌ Try again!";
-  }
+  <script>
+    let score = 0, totalQuestions = 25, currentQuestion = 0, correctAnswer;
 
-  document.getElementById("score").innerText = `Score: ${score} / 100`;
+    function generateQuestion() {
+      const tens = Math.floor(Math.random() * 10);
+      const ones = Math.floor(Math.random() * 10);
+      correctAnswer = tens * 10 + ones;
 
-  if (currentQuestion < totalQuestions) {
-    setTimeout(generateQuestion, 1000);
-  } else {
-    document.getElementById("feedback").innerText += " 🎉 All questions complete!";
-  }
-}
+      document.getElementById("question").innerText =
+        `🟦 ${tens} tens and 🟨 ${ones} ones`;
 
-generateQuestion();
-</script>
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      if (userAnswer === correctAnswer) {
+        currentQuestion++;
+        score += 4;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 All done!";
+      }
+    }
+
+    generateQuestion();
+  </script>
 
 </body>
 </html>

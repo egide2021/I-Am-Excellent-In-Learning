@@ -3,85 +3,197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Place Value: Tens and Ones</title>
+  <title>Understand Place Value: Tens and Ones</title>
   <style>
     body {
-      font-family: Arial;
-      background: #f9faff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #007acc;
+      color: white;
       padding: 20px;
     }
-    h1 {
-      text-align: center;
-      color: #007acc;
+
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    input, button {
-      font-size: 18px;
-      padding: 6px 12px;
+
+    section {
+      margin-bottom: 30px;
     }
+
+    input, select {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007acc;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005f99;
+    }
+
+    canvas {
+      border: 1px solid #aaa;
+      background: #fff;
+      margin-top: 10px;
+    }
+
     #feedback {
       font-weight: bold;
-      margin-top: 10px;
+    }
+
+    #score {
+      font-size: 18px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Understand Place Value: Tens and Ones</h1>
+  </header>
 
-  <h1>🔢 Understand Place Value (Tens and Ones)</h1>
+  <main>
+    <section>
+      <h2>Summary</h2>
+      <p>Each number has a place value. The digit on the left shows the number of tens, and the digit on the right shows the number of ones.</p>
+    </section>
 
-  <p><strong>Summary:</strong> Break apart numbers into tens and ones to understand how they are built. For example, the number 42 is made of 4 tens and 2 ones.</p>
+    <section>
+      <h2>Examples</h2>
+      <ul>
+        <li>32 = 3 tens and 2 ones</li>
+        <li>48 = 4 tens and 8 ones</li>
+        <li>90 = 9 tens and 0 ones</li>
+        <li>17 = 1 ten and 7 ones</li>
+      </ul>
+    </section>
 
-  <p><strong>Examples:</strong></p>
-  <ul>
-    <li>🟦 4 tens and 🟨 2 ones → <em>Answer: 42</em></li>
-    <li>🟦 7 tens and 🟨 9 ones → <em>Answer: 79</em></li>
-    <li>🟦 1 ten and 🟨 3 ones → <em>Answer: 13</em></li>
-  </ul>
+    <section>
+      <h2>Quiz: Identify Tens and Ones</h2>
+      <p id="question">Loading...</p>
+      <input type="text" id="answer" placeholder="Your answer">
+      <br>
+      <button onclick="checkAnswer()">Submit</button>
+      <p id="feedback"></p>
+      <p id="score">Score: 0</p>
+    </section>
 
-  <div id="question"></div>
+    <hr>
 
-  <label>What number is shown?</label><br />
-  <input type="number" id="answer" />
-  <button onclick="checkAnswer()">Submit</button>
+    <section>
+      <h2>✏️ Try It Yourself – Draw Your Workings</h2>
+      <canvas id="draw" width="600" height="300"></canvas><br>
+      <label for="color">Choose pencil color:</label>
+      <select id="color">
+        <option value="black">🖤 Black</option>
+        <option value="red">❤️ Red</option>
+        <option value="blue">💙 Blue</option>
+        <option value="green">💚 Green</option>
+      </select>
+      <button onclick="clearCanvas()">🧼 Clear</button>
+    </section>
 
-  <p id="feedback"></p>
-  <p id="score">Score: 0 / 100</p>
+    <script>
+      const questions = [
+        { number: 45, answer: "4 tens and 5 ones" },
+        { number: 81, answer: "8 tens and 1 one" },
+        { number: 62, answer: "6 tens and 2 ones" },
+        { number: 19, answer: "1 ten and 9 ones" },
+        { number: 70, answer: "7 tens and 0 ones" },
+        { number: 36, answer: "3 tens and 6 ones" },
+        { number: 54, answer: "5 tens and 4 ones" },
+        { number: 10, answer: "1 ten and 0 ones" },
+        { number: 99, answer: "9 tens and 9 ones" },
+        { number: 20, answer: "2 tens and 0 ones" }
+      ];
 
-  <script>
-    let score = 0, totalQuestions = 25, currentQuestion = 0, correctAnswer;
+      let score = 0;
+      let current = 0;
 
-    function generateQuestion() {
-      const tens = Math.floor(Math.random() * 10);
-      const ones = Math.floor(Math.random() * 10);
-      correctAnswer = tens * 10 + ones;
-
-      document.getElementById("question").innerText =
-        `🟦 ${tens} tens and 🟨 ${ones} ones`;
-
-      document.getElementById("answer").value = "";
-      document.getElementById("feedback").innerText = "";
-    }
-
-    function checkAnswer() {
-      const userAnswer = parseInt(document.getElementById("answer").value);
-      if (userAnswer === correctAnswer) {
-        currentQuestion++;
-        score += 4;
-        document.getElementById("feedback").innerText = "✅ Correct!";
-      } else {
-        document.getElementById("feedback").innerText = "❌ Try again!";
+      function showQuestion() {
+        if (current < questions.length) {
+          document.getElementById("question").innerText = `What is the place value of ${questions[current].number}? (e.g. '3 tens and 2 ones')`;
+          document.getElementById("answer").value = "";
+          document.getElementById("feedback").innerText = "";
+        } else {
+          document.getElementById("question").innerText = "🎉 Quiz completed!";
+          document.getElementById("feedback").innerText = `Final Score: ${score} out of ${questions.length}`;
+          document.getElementById("answer").style.display = "none";
+          document.querySelector("button").style.display = "none";
+        }
       }
 
-      document.getElementById("score").innerText = `Score: ${score} / 100`;
-
-      if (currentQuestion < totalQuestions) {
-        setTimeout(generateQuestion, 1000);
-      } else {
-        document.getElementById("feedback").innerText += " 🎉 All done!";
+      function checkAnswer() {
+        const user = document.getElementById("answer").value.trim().toLowerCase();
+        const correct = questions[current].answer.toLowerCase();
+        if (user === correct) {
+          score++;
+          document.getElementById("feedback").innerText = "✅ Correct!";
+        } else {
+          document.getElementById("feedback").innerText = `❌ Incorrect. Correct answer is: ${questions[current].answer}`;
+        }
+        current++;
+        document.getElementById("score").innerText = `Score: ${score}`;
+        showQuestion();
       }
-    }
 
-    generateQuestion();
-  </script>
+      window.onload = showQuestion;
 
+      const canvas = document.getElementById("draw");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+      canvas.addEventListener("mouseout", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (!drawing) return;
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+
+      function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    </script>
+  </main>
 </body>
 </html>

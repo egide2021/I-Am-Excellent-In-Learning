@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logical Thinking Puzzles</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6fff6;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .puzzle {
+      font-size: 22px;
+      margin: 20px 0;
+      padding: 10px;
+      background: #f1f1f1;
+      border-radius: 8px;
+      border-left: 5px solid #00aa00;
+    }
+    canvas {
+      border: 1px solid #000;
+      margin-top: 10px;
+    }
+    button.audio {
+      margin-left: 10px;
+      background: #ddd;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Use Logical Thinking to Solve Puzzles
+    <button class="audio" onclick="speak('Let’s learn how to use logical thinking to solve simple puzzles.')">🔊</button>
+  </h1>
+
+  <h2>📝 Summary:
+    <button class="audio" onclick="speak('Logical thinking means thinking step by step and using clues to find an answer.')">🔊</button>
+  </h2>
+  <p>Logical thinking helps us solve puzzles by using clues. It teaches us how to make smart decisions in math and life!</p>
+
+  <h2>🔍 Example Puzzle:
+    <button class="audio" onclick="speak('Which object is different and does not belong in this group?')">🔊</button>
+  </h2>
+  <div class="puzzle">
+    🟢 🟢 🔵 🟢  
+  </div>
+  <p>Which shape is different?</p>
+
+  <h2>🧠 Quiz:
+    <button class="audio" onclick="speak('Which shape is different? Type the color of the odd one out.')">🔊</button>
+  </h2>
+  <input type="text" id="puzzle-answer" placeholder="Type the color (e.g. blue)">
+  <button onclick="checkLogic()">Submit</button>
+  <p id="quiz-feedback"></p>
+
+  <h2>✏️ Try Drawing a Puzzle:
+    <button class="audio" onclick="speak('Try drawing your own puzzle with shapes or objects and find the one that doesn’t belong.')">🔊</button>
+  </h2>
+  <div class="canvas-tools">
+    <button onclick="changeTool('draw')">✏️ Pencil</button>
+    <button onclick="changeTool('erase')">🧽 Eraser</button>
+    <button onclick="clearCanvas()">🗑️ Clear</button>
+  </div>
+  <canvas id="drawingCanvas" width="300" height="300"></canvas>
+
+  <script>
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(msg);
+    }
+
+    function checkLogic() {
+      const ans = document.getElementById("puzzle-answer").value.toLowerCase();
+      const feedback = document.getElementById("quiz-feedback");
+      if (ans.includes("blue")) {
+        feedback.innerText = "✅ Correct! The blue circle is different.";
+        speak("Correct! The blue one is different.");
+      } else {
+        feedback.innerText = "❌ Try again. The correct answer is blue.";
+        speak("Oops. The correct answer is blue.");
+      }
+    }
+
+    const canvas = document.getElementById("drawingCanvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let tool = 'draw';
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mouseout", () => drawing = false);
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineWidth = tool === 'erase' ? 20 : 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = tool === 'erase' ? "#ffffff" : "#000000";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function changeTool(selectedTool) {
+      tool = selectedTool;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  </script>
+
+</body>
+</html>

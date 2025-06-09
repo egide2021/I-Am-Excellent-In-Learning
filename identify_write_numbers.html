@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Identify, Write, and Represent Numbers (0–120)</title>
+  <style>
+    body { font-family: Arial; background: #f9faff; padding: 20px; }
+    h1 { text-align: center; color: #007acc; }
+    .question { font-size: 20px; margin-bottom: 10px; }
+    input, button { font-size: 18px; padding: 6px 12px; }
+    #feedback { font-weight: bold; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>✍️ Identify, Write, and Represent Numbers (0–120)</h1>
+<p><strong>Learning Objective:</strong> Recognize, write, and visualize numbers from 0 to 120 using digits and number order.</p>
+
+<div class="question" id="question"></div>
+<input type="number" id="answer" />
+<button onclick="checkAnswer()">Submit</button>
+
+<p id="feedback"></p>
+<p id="score">Score: 0 / 100</p>
+
+<script>
+let score = 0, totalQuestions = 25, currentQuestion = 0, correctAnswer;
+
+function generateQuestion() {
+  const number = Math.floor(Math.random() * 121);
+  correctAnswer = number;
+  const type = Math.random() < 0.5 ? "identify" : "count";
+
+  document.getElementById("question").innerText =
+    type === "identify" ? `Write this number: ${number}` :
+    `What number comes after ${number - 1}?`;
+
+  document.getElementById("answer").value = "";
+  document.getElementById("feedback").innerText = "";
+}
+
+function checkAnswer() {
+  const userAnswer = parseInt(document.getElementById("answer").value);
+  if (userAnswer === correctAnswer) {
+    score += 4; currentQuestion++;
+    document.getElementById("feedback").innerText = "✅ Correct!";
+  } else {
+    document.getElementById("feedback").innerText = "❌ Try again!";
+  }
+  document.getElementById("score").innerText = `Score: ${score} / 100`;
+  if (currentQuestion < totalQuestions) setTimeout(generateQuestion, 1000);
+  else document.getElementById("feedback").innerText += " 🎉 All done!";
+}
+generateQuestion();
+</script>
+
+</body>
+</html>

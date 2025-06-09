@@ -8,7 +8,7 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background-color: #f9f9f9;
+      background-color: #f0f8ff;
       margin: 0;
       padding: 0;
     }
@@ -32,12 +32,11 @@
       margin-bottom: 30px;
     }
 
-    input {
+    input, select {
       padding: 10px;
       font-size: 16px;
-      width: 100px;
-      text-align: center;
       margin-top: 10px;
+      text-align: center;
     }
 
     button {
@@ -64,6 +63,21 @@
       margin-top: 10px;
       font-size: 18px;
     }
+
+    canvas {
+      border: 1px solid #aaa;
+      background: #fff;
+      margin-top: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -74,15 +88,15 @@
   <main>
     <section>
       <h2>Summary</h2>
-      <p>Word problems help us use math in real-life situations. To solve them, read the problem carefully, decide whether to add or subtract, and write a number sentence to find the answer.</p>
+      <p>Word problems help us use math in real life. Read the question carefully, figure out what is happening, and write an equation to solve it.</p>
     </section>
 
     <section>
       <h2>Worked Examples</h2>
-      <ul style="list-style: none; padding: 0;">
-        <li>📘 Liam has 7 apples. He buys 6 more. How many apples does he have now?<br>👉 7 + 6 = 13</li><br>
-        <li>📘 Emma had 15 stickers. She gave 4 to her friend. How many does she have left?<br>👉 15 - 4 = 11</li><br>
-        <li>📘 There are 8 red balloons and 9 blue balloons. How many balloons in total?<br>👉 8 + 9 = 17</li>
+      <ul>
+        <li>📘 Liam has 7 apples. He buys 6 more. How many apples?<br>👉 7 + 6 = 13</li>
+        <li>📘 Emma had 15 stickers. She gave 4 to her friend. How many left?<br>👉 15 - 4 = 11</li>
+        <li>📘 There are 8 red balloons and 9 blue ones. How many in total?<br>👉 8 + 9 = 17</li>
       </ul>
     </section>
 
@@ -96,14 +110,91 @@
       <p id="score">Score: 0</p>
     </section>
 
+    <hr>
+
+    <section>
+      <h2>✏️ Try It Yourself – Draw Your Workings</h2>
+      <canvas id="draw" width="600" height="300"></canvas><br>
+      <label for="color">Choose pencil color:</label>
+      <select id="color">
+        <option value="black">🖤 Black</option>
+        <option value="red">❤️ Red</option>
+        <option value="blue">💙 Blue</option>
+        <option value="green">💚 Green</option>
+      </select>
+      <button onclick="clearCanvas()">🧼 Clear</button>
+    </section>
+
     <script>
       const questions = [
-        { question: "Liam has 8 marbles. He finds 7 more. How many marbles does he have now?", answer: 15 },
-        { question: "Ava has 12 candies. She eats 3. How many are left?", answer: 9 },
-        { question: "There are 6 ducks in the pond. 5 more arrive. How many ducks now?", answer: 11 },
+        { question: "Liam has 8 marbles. He finds 7 more. How many?", answer: 15 },
+        { question: "Ava has 12 candies. She eats 3. How many left?", answer: 9 },
+        { question: "There are 6 ducks in the pond. 5 more come. Total?", answer: 11 },
         { question: "Mia had 14 pencils. She lost 6. How many left?", answer: 8 },
-        { question: "Tom has 10 oranges. He gives 4 away. How many does he have?", answer: 6 },
-        { question: "There are 9 blue balls and 6 red balls. How many balls in total?", answer: 15 },
-        { question: "James had 18 cookies. He ate 7. How many remain?", answer: 11 },
-        { question: "Ella sees 7 birds in a tree. Then 5 fly away. How many remain?", answer: 2 },
-        { question: "
+        { question: "Tom has 10 oranges. He gives 4 away. Left?", answer: 6 },
+        { question: "There are 9 blue balls and 6 red. Total?", answer: 15 },
+        { question: "James had 18 cookies. He ate 7. Left?", answer: 11 },
+        { question: "Ella sees 7 birds. 5 fly away. How many remain?", answer: 2 },
+        { question: "You have 13 books. Buy 4 more. Total?", answer: 17 },
+        { question: "Sarah sees 16 frogs. 8 jump away. Still there?", answer: 8 }
+      ];
+
+      let current = 0;
+      let score = 0;
+
+      function showQuestion() {
+        if (current < questions.length) {
+          document.getElementById("question").innerText = questions[current].question;
+          document.getElementById("answer").value = "";
+          document.getElementById("feedback").innerText = "";
+        } else {
+          document.getElementById("question").innerText = "🎉 Quiz completed!";
+          document.getElementById("feedback").innerText = `Final Score: ${score} out of ${questions.length}`;
+          document.getElementById("answer").style.display = "none";
+          document.querySelector("button").style.display = "none";
+        }
+      }
+
+      function checkAnswer() {
+        const userAnswer = parseInt(document.getElementById("answer").value);
+        if (userAnswer === questions[current].answer) {
+          score++;
+          document.getElementById("feedback").innerText = "✅ Correct!";
+        } else {
+          document.getElementById("feedback").innerText = `❌ Incorrect. The correct answer is ${questions[current].answer}.`;
+        }
+        current++;
+        document.getElementById("score").innerText = `Score: ${score}`;
+        showQuestion();
+      }
+
+      window.onload = showQuestion;
+
+      const canvas = document.getElementById("draw");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+      canvas.addEventListener("mouseout", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (!drawing) return;
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+
+      function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    </script>
+  </main>
+</body>
+</html>

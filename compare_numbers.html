@@ -5,62 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Compare Numbers</title>
   <style>
-    body { font-family: Arial; background: #f9faff; padding: 20px; }
-    h1 { text-align: center; color: #007acc; }
-    input, button { font-size: 18px; padding: 6px 12px; }
-    #feedback { font-weight: bold; margin-top: 10px; }
+    body {
+      font-family: Arial;
+      background: #f9faff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #007acc;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 6px 12px;
+    }
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
-<h1>🔍 Compare Numbers Using &gt;, &lt;, =</h1>
-<p><strong>Learning Objective:</strong> Compare two numbers from 0 to 120 using symbols >, <, and =.</p>
+  <h1>🔍 Compare Numbers Using &gt;, &lt;, =</h1>
 
-<div id="question"></div>
-<label>Which symbol makes the statement true?</label><br />
-<input type="text" id="answer" placeholder="> or < or =" maxlength="1" />
-<button onclick="checkAnswer()">Submit</button>
+  <p><strong>Summary:</strong> Learn how to compare two numbers and use the correct math symbol:</p>
+  <ul>
+    <li><strong>&gt;</strong> means greater than</li>
+    <li><strong>&lt;</strong> means less than</li>
+    <li><strong>=</strong> means equal to</li>
+  </ul>
 
-<p id="feedback"></p>
-<p id="score">Score: 0 / 100</p>
+  <p><strong>Example:</strong> Compare: 78 ___ 61 → <em>Answer: &gt;</em></p>
 
-<script>
-let score = 0, totalQuestions = 25, currentQuestion = 0;
-let a, b, correctSymbol;
+  <div id="question"></div>
 
-function generateQuestion() {
-  a = Math.floor(Math.random() * 121);
-  b = Math.floor(Math.random() * 121);
+  <label>Which symbol makes the statement true?</label><br />
+  <input type="text" id="answer" placeholder="> or < or =" maxlength="1" />
+  <button onclick="checkAnswer()">Submit</button>
 
-  if (a > b) correctSymbol = ">";
-  else if (a < b) correctSymbol = "<";
-  else correctSymbol = "=";
+  <p id="feedback"></p>
+  <p id="score">Score: 0 / 100</p>
 
-  document.getElementById("question").innerText = `Compare: ${a} ___ ${b}`;
-  document.getElementById("answer").value = "";
-  document.getElementById("feedback").innerText = "";
-}
+  <script>
+    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    let a, b, correctSymbol;
 
-function checkAnswer() {
-  const userAnswer = document.getElementById("answer").value.trim();
-  if (userAnswer === correctSymbol) {
-    currentQuestion++; score += 4;
-    document.getElementById("feedback").innerText = "✅ Correct!";
-  } else {
-    document.getElementById("feedback").innerText = "❌ Try again!";
-  }
+    function generateQuestion() {
+      a = Math.floor(Math.random() * 121);
+      b = Math.floor(Math.random() * 121);
 
-  document.getElementById("score").innerText = `Score: ${score} / 100`;
+      if (a > b) correctSymbol = ">";
+      else if (a < b) correctSymbol = "<";
+      else correctSymbol = "=";
 
-  if (currentQuestion < totalQuestions) {
-    setTimeout(generateQuestion, 1000);
-  } else {
-    document.getElementById("feedback").innerText += " 🎉 Activity complete!";
-  }
-}
+      document.getElementById("question").innerText = `Compare: ${a} ___ ${b}`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
 
-generateQuestion();
-</script>
+    function checkAnswer() {
+      const userAnswer = document.getElementById("answer").value.trim();
+      if (userAnswer === correctSymbol) {
+        currentQuestion++; score += 4;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 Great job!";
+      }
+    }
+
+    generateQuestion();
+  </script>
 
 </body>
 </html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recognize and Create Patterns</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fffef2;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .pattern-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .pattern-row {
+      font-size: 24px;
+      background: #f8f8f8;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 1px 1px 5px #ccc;
+    }
+    canvas {
+      border: 1px solid #000;
+      margin-top: 10px;
+    }
+    button.audio {
+      margin-left: 10px;
+      background: #ddd;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎲 Recognize and Create Repeating Patterns
+    <button class="audio" onclick="speak('Today we are going to learn about repeating patterns like AB, AAB, ABB, and ABC.')">🔊</button>
+  </h1>
+
+  <h2>📝 Summary:
+    <button class="audio" onclick="speak('A pattern repeats over and over. It can be made with colors, shapes, sounds, or objects. Some common types are AB, AAB, ABB, and ABC.')">🔊</button>
+  </h2>
+  <p>A pattern is a sequence that repeats. Here are some simple repeating patterns:</p>
+
+  <h2>🔍 Examples:
+    <button class="audio" onclick="speak('Let’s look at some pattern examples. Try to say what comes next.')">🔊</button>
+  </h2>
+  <div class="pattern-examples">
+    <div class="pattern-row">🔴 🔵 🔴 🔵 🔴 🔵 <strong>(AB)</strong></div>
+    <div class="pattern-row">🟢 🟢 🔵 🟢 🟢 🔵 <strong>(AAB)</strong></div>
+    <div class="pattern-row">🔴 🔵 🔵 🔴 🔵 🔵 <strong>(ABB)</strong></div>
+    <div class="pattern-row">🟡 🔵 🟢 🔴 🟡 🔵 🟢 🔴 <strong>(ABCD)</strong></div>
+  </div>
+
+  <h2>🧠 Quiz:
+    <button class="audio" onclick="speak('Quiz time! What comes next in this pattern? Red, blue, red, blue...')">🔊</button>
+  </h2>
+  <p>What comes next? 🔴 🔵 🔴 🔵</p>
+  <input type="text" id="pattern-answer" placeholder="Use emoji or type color (e.g. red)">
+  <button onclick="checkPattern()">Submit</button>
+  <p id="quiz-feedback"></p>
+
+  <h2>✏️ Try Making Your Own Pattern:
+    <button class="audio" onclick="speak('Now draw your own repeating pattern using the pencil. Try AB or AAB.')">🔊</button>
+  </h2>
+  <div class="canvas-tools">
+    <button onclick="changeTool('draw')">✏️ Pencil</button>
+    <button onclick="changeTool('erase')">🧽 Eraser</button>
+    <button onclick="clearCanvas()">🗑️ Clear</button>
+  </div>
+  <canvas id="drawingCanvas" width="300" height="300"></canvas>
+
+  <script>
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(msg);
+    }
+
+    function checkPattern() {
+      const ans = document.getElementById("pattern-answer").value.toLowerCase();
+      const feedback = document.getElementById("quiz-feedback");
+      if (ans.includes("🔴") || ans.includes("red")) {
+        feedback.innerText = "✅ Correct! The pattern repeats red next.";
+        speak("Correct! The pattern repeats red.");
+      } else {
+        feedback.innerText = "❌ Try again. The next shape is red.";
+        speak("Oops. The answer is red.");
+      }
+    }
+
+    const canvas = document.getElementById("drawingCanvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let tool = 'draw';
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mouseout", () => drawing = false);
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineWidth = tool === 'erase' ? 20 : 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = tool === 'erase' ? "#ffffff" : "#000000";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function changeTool(selectedTool) {
+      tool = selectedTool;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  </script>
+
+</body>
+</html>

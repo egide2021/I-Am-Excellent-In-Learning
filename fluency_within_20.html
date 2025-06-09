@@ -2,102 +2,129 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fluency Within 20</title>
+  <title>Fluency Within 20 Using Strategies</title>
   <style>
     body {
-      font-family: Arial;
-      background: #f9f0ff;
+      font-family: Arial, sans-serif;
       padding: 20px;
+      background-color: #fff8e1;
     }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
+    h1 {
+      color: #f39c12;
     }
-    input, button {
-      font-size: 18px;
+    canvas {
+      border: 1px solid #000;
+      margin-top: 20px;
+      display: block;
+    }
+    button {
+      margin-top: 10px;
       padding: 6px 12px;
-      margin-top: 10px;
-    }
-    #feedback {
       font-weight: bold;
-      margin-top: 10px;
-    }
-    ul {
-      text-align: left;
-      display: inline-block;
     }
   </style>
 </head>
 <body>
+  <h1>Fluency: Add and Subtract Within 20 Using Strategies</h1>
+  <p><strong>Summary:</strong> To add and subtract within 20, we use helpful strategies like:</p>
+  <ul>
+    <li><strong>Count on:</strong> Start at the bigger number and count up.</li>
+    <li><strong>Use doubles:</strong> Know 7 + 7 = 14, so 7 + 8 = 15.</li>
+    <li><strong>Make 10:</strong> Turn 8 + 5 into 10 + 3 = 13.</li>
+    <li><strong>Related facts:</strong> If 14 - 6 = 8, then 6 + 8 = 14.</li>
+  </ul>
 
-  <div class="container">
-    <h1>🧠 Fluency Within 20: Add and Subtract Using Strategies</h1>
+  <h2>Practice Quiz (20 questions)</h2>
+  <p id="question"></p>
+  <input type="number" id="answer" />
+  <button onclick="checkAnswer()">Submit</button>
+  <p id="feedback"></p>
+  <p id="score">Score: 0 / 20</p>
 
-    <p><strong>Summary:</strong> Use strategies like counting on, making ten, and doubles to add or subtract numbers within 20.</p>
-
-    <p><strong>Examples:</strong></p>
-    <ul>
-      <li>8 + 6 → Think 8 + 2 = 10, then 10 + 4 = 14</li>
-      <li>13 − 6 → Count back: 13 − 3 = 10, then −3 more = 7</li>
-      <li>9 + 9 → Use doubles → 18</li>
-    </ul>
-
-    <div id="question" style="margin-top: 20px;"></div>
-
-    <label>Your Answer:</label><br />
-    <input type="number" id="answer" />
-    <button onclick="checkAnswer()">Submit</button>
-
-    <p id="feedback"></p>
-    <p id="score">Score: 0 / 100</p>
-  </div>
+  <h2>Drawing Space:</h2>
+  <p>Use this area to break apart numbers or draw number lines.</p>
+  <canvas id="canvas" width="400" height="200"></canvas>
+  <button onclick="clearCanvas()">Clear</button>
 
   <script>
-    let score = 0, totalQuestions = 25, currentQuestion = 0;
-    let num1, num2, isAddition;
+    let score = 0;
+    let totalQuestions = 20;
+    let currentQuestion = 0;
+    let num1, num2, operator;
+
+    const questionEl = document.getElementById("question");
+    const answerEl = document.getElementById("answer");
+    const feedbackEl = document.getElementById("feedback");
+    const scoreEl = document.getElementById("score");
 
     function generateQuestion() {
-      num1 = Math.floor(Math.random() * 21);
-      num2 = Math.floor(Math.random() * 21);
-      isAddition = Math.random() < 0.5;
+      num1 = Math.floor(Math.random() * 11) + 5; // 5 to 15
+      num2 = Math.floor(Math.random() * 11) + 1; // 1 to 11
+      operator = Math.random() < 0.5 ? '+' : '-';
 
-      if (!isAddition && num2 > num1) [num1, num2] = [num2, num1];
+      // Make sure subtraction is valid
+      if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1];
 
-      const symbol = isAddition ? '+' : '−';
-      document.getElementById("question").innerText = `What is ${num1} ${symbol} ${num2}?`;
-      document.getElementById("answer").value = "";
-      document.getElementById("feedback").innerText = "";
+      questionEl.textContent = `What is ${num1} ${operator} ${num2}?`;
+      feedbackEl.textContent = "";
+      answerEl.value = "";
     }
 
     function checkAnswer() {
-      const userAnswer = parseInt(document.getElementById("answer").value);
-      const correctAnswer = isAddition ? num1 + num2 : num1 - num2;
-
-      if (userAnswer === correctAnswer) {
-        score += 4;
-        currentQuestion++;
-        document.getElementById("feedback").innerText = "✅ Correct!";
-      } else {
-        document.getElementById("feedback").innerText = "❌ Try again!";
+      if (currentQuestion >= totalQuestions) {
+        feedbackEl.textContent = "✅ Quiz complete!";
+        return;
       }
 
-      document.getElementById("score").innerText = `Score: ${score} / 100`;
+      const userAnswer = parseInt(answerEl.value);
+      const correctAnswer = operator === '+' ? num1 + num2 : num1 - num2;
+
+      if (userAnswer === correctAnswer) {
+        score++;
+        feedbackEl.textContent = "✅ Correct!";
+      } else {
+        feedbackEl.textContent = `❌ Incorrect. Answer was ${correctAnswer}.`;
+      }
+
+      currentQuestion++;
+      scoreEl.textContent = `Score: ${score} / ${totalQuestions}`;
 
       if (currentQuestion < totalQuestions) {
-        setTimeout(generateQuestion, 1000);
+        generateQuestion();
       } else {
-        document.getElementById("feedback").innerText += " 🎉 All done!";
+        questionEl.textContent = "🎉 Great work! You finished the fluency practice.";
       }
     }
 
     generateQuestion();
-  </script>
 
+    // Drawing Canvas Logic
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+  </script>
 </body>
 </html>

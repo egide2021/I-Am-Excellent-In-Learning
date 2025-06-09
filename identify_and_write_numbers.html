@@ -1,122 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Identify and Write Numbers</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Identify, Write, and Represent Numbers (0–120)</title>
   <style>
-    .number-card {
-      display: inline-block;
-      margin: 10px;
-      background-color: #e0f7fa;
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9faff;
       padding: 20px;
-      font-size: 2em;
-      border-radius: 10px;
-      width: 60px;
+    }
+    h1 {
       text-align: center;
+      color: #007acc;
     }
-
-    .quiz-box {
-      margin-top: 40px;
+    .question {
+      font-size: 20px;
+      margin-bottom: 10px;
     }
-
-    input[type="text"] {
-      padding: 6px;
-      font-size: 1em;
-    }
-
-    button {
+    input, button {
+      font-size: 18px;
       padding: 6px 12px;
-      font-size: 1em;
-      margin-left: 10px;
     }
-
     #feedback {
       font-weight: bold;
-      margin-top: 15px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Identify and Write Numbers</h1>
-    <p>Recognize, match, and write numbers from 1 to 20.</p>
-  </header>
 
-  <main>
-    <section>
-      <h2>Numbers from 1 to 10</h2>
-      <div>
-        <div class="number-card">1</div>
-        <div class="number-card">2</div>
-        <div class="number-card">3</div>
-        <div class="number-card">4</div>
-        <div class="number-card">5</div>
-        <div class="number-card">6</div>
-        <div class="number-card">7</div>
-        <div class="number-card">8</div>
-        <div class="number-card">9</div>
-        <div class="number-card">10</div>
-      </div>
-    </section>
+  <h1>✍️ Identify, Write, and Represent Numbers (0–120)</h1>
 
-    <section class="quiz-box">
-      <h2>Quick Practice</h2>
-      <p>What number is this: <strong><span id="quizWord">Four</span></strong>?</p>
-      <input type="text" id="userInput" placeholder="Type the number...">
-      <button onclick="checkAnswer()">Submit</button>
-      <p id="feedback"></p>
-    </section>
-  </main>
+  <p><strong>Summary:</strong> Practice recognizing numbers, writing them, and placing them in order between 0 and 120.</p>
+  <p><strong>Example:</strong> What number comes after 89? → <em>Answer: 90</em></p>
 
-  <footer>
-    <p>&copy; 2025 I Am Excellent In Learning</p>
-  </footer>
+  <div style="margin: 20px 0;">
+    <strong>Number Line (0 to 120):</strong><br />
+    <div style="overflow-x: auto; white-space: nowrap; font-family: monospace; font-size: 14px;">
+      0&nbsp;&nbsp;5&nbsp;&nbsp;10&nbsp;&nbsp;15&nbsp;&nbsp;20&nbsp;&nbsp;25&nbsp;&nbsp;30&nbsp;&nbsp;35&nbsp;&nbsp;40&nbsp;&nbsp;45&nbsp;&nbsp;50&nbsp;&nbsp;
+      55&nbsp;&nbsp;60&nbsp;&nbsp;65&nbsp;&nbsp;70&nbsp;&nbsp;75&nbsp;&nbsp;80&nbsp;&nbsp;85&nbsp;&nbsp;90&nbsp;&nbsp;95&nbsp;&nbsp;100&nbsp;&nbsp;
+      105&nbsp;&nbsp;110&nbsp;&nbsp;115&nbsp;&nbsp;120
+    </div>
+  </div>
+
+  <div class="question" id="question"></div>
+  <input type="number" id="answer" />
+  <button onclick="checkAnswer()">Submit</button>
+
+  <p id="feedback"></p>
+  <p id="score">Score: 0 / 100</p>
 
   <script>
-    const quizWord = document.getElementById("quizWord");
-    const userInput = document.getElementById("userInput");
-    const feedback = document.getElementById("feedback");
+    let score = 0;
+    let totalQuestions = 25;
+    let currentQuestion = 0;
+    let correctAnswer;
 
-    const wordsToNumbers = {
-      "One": "1",
-      "Two": "2",
-      "Three": "3",
-      "Four": "4",
-      "Five": "5",
-      "Six": "6",
-      "Seven": "7",
-      "Eight": "8",
-      "Nine": "9",
-      "Ten": "10"
-    };
+    function generateQuestion() {
+      const number = Math.floor(Math.random() * 121);
+      correctAnswer = number;
 
-    const words = Object.keys(wordsToNumbers);
+      const type = Math.random() < 0.5 ? "identify" : "count";
+      if (type === "identify") {
+        document.getElementById("question").innerText = `Write this number: ${number}`;
+      } else {
+        document.getElementById("question").innerText = `What number comes after ${number - 1}?`;
+      }
 
-    function getRandomWord() {
-      return words[Math.floor(Math.random() * words.length)];
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
     }
 
     function checkAnswer() {
-      const currentWord = quizWord.innerText;
-      const correctAnswer = wordsToNumbers[currentWord];
-      const userAnswer = userInput.value.trim();
-
+      const userAnswer = parseInt(document.getElementById("answer").value);
       if (userAnswer === correctAnswer) {
-        feedback.innerText = "✅ Correct!";
+        currentQuestion++;
+        score += 4;
+        document.getElementById("feedback").innerText = "✅ Correct!";
       } else {
-        feedback.innerText = "❌ Try again. It's " + correctAnswer + ".";
+        document.getElementById("feedback").innerText = "❌ Try again!";
       }
 
-      setTimeout(() => {
-        quizWord.innerText = getRandomWord();
-        userInput.value = "";
-        feedback.innerText = "";
-      }, 2000);
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 Well done! You’ve completed this activity.";
+      }
     }
 
-    // Set first quiz word
-    quizWord.innerText = getRandomWord();
+    generateQuestion();
   </script>
+
 </body>
 </html>

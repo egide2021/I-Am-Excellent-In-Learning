@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Use Fact Families</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f0fff5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 650px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 6px 12px;
+      margin-top: 10px;
+    }
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    ul {
+      text-align: left;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🧩 Use Fact Families</h1>
+
+    <p><strong>Summary:</strong> Fact families help you see how addition and subtraction are connected. If 3 + 4 = 7, then 7 − 3 = 4 and 7 − 4 = 3.</p>
+
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li>Fact Family for 3, 4, and 7: 3 + 4 = 7, 4 + 3 = 7, 7 − 3 = 4, 7 − 4 = 3</li>
+      <li>If you know 5 + 2 = 7, then you also know 7 − 5 = 2 and 7 − 2 = 5</li>
+    </ul>
+
+    <div id="question"></div>
+
+    <label>Your Answer:</label><br />
+    <input type="number" id="answer" />
+    <button onclick="checkAnswer()">Submit</button>
+
+    <p id="feedback"></p>
+    <p id="score">Score: 0 / 100</p>
+  </div>
+
+  <script>
+    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    let whole, part, missing;
+
+    function generateQuestion() {
+      const a = Math.floor(Math.random() * 6) + 2; // 2–7
+      const b = Math.floor(Math.random() * 4) + 2; // 2–5
+      whole = a + b;
+      if (Math.random() < 0.5) {
+        part = a;
+        missing = whole - part;
+        document.getElementById("question").innerText = `What is ${whole} − ${part}?`;
+      } else {
+        part = b;
+        missing = whole - part;
+        document.getElementById("question").innerText = `What is ${whole} − ${part}?`;
+      }
+
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      if (userAnswer === missing) {
+        score += 4;
+        currentQuestion++;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText

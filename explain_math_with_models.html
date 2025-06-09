@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explain Math Using Models and Drawings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2faff;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .example {
+      background: #eaf6ff;
+      padding: 15px;
+      border-left: 5px solid #0099cc;
+      margin: 20px 0;
+      font-size: 18px;
+    }
+    canvas {
+      border: 1px solid #000;
+      margin-top: 10px;
+    }
+    button.audio {
+      margin-left: 10px;
+      background: #ddd;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🖍️ Explain Math Using Models and Drawings
+    <button class="audio" onclick="speak('Let’s learn how to explain math using pictures, models, or drawings.')">🔊</button>
+  </h1>
+
+  <h2>📝 Summary:
+    <button class="audio" onclick="speak('When we use pictures or blocks to show our thinking, we understand math better. This helps explain our ideas to others too.')">🔊</button>
+  </h2>
+  <p>We can use objects, blocks, shapes, or drawings to explain how we solve math problems.</p>
+
+  <h2>🔍 Example:
+    <button class="audio" onclick="speak('If you have 3 apples and get 2 more, you can draw apples or use blocks to show 3 plus 2 equals 5.')">🔊</button>
+  </h2>
+  <div class="example">
+    🍎 🍎 🍎 + 🍎 🍎 = 5 apples<br/>
+    3 + 2 = 5
+  </div>
+
+  <h2>🧠 Try It:
+    <button class="audio" onclick="speak('Draw or explain how you would solve this: You have 4 toys and you get 3 more.')">🔊</button>
+  </h2>
+  <p>Use the canvas below to draw your thinking for: <strong>4 toys + 3 toys = ?</strong></p>
+
+  <h2>✏️ Drawing Space:
+    <button class="audio" onclick="speak('Use the pencil to draw your model or add numbers. Use the eraser to fix mistakes.')">🔊</button>
+  </h2>
+  <div class="canvas-tools">
+    <button onclick="changeTool('draw')">✏️ Pencil</button>
+    <button onclick="changeTool('erase')">🧽 Eraser</button>
+    <button onclick="clearCanvas()">🗑️ Clear</button>
+  </div>
+  <canvas id="drawingCanvas" width="300" height="300"></canvas>
+
+  <script>
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(msg);
+    }
+
+    const canvas = document.getElementById("drawingCanvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let tool = 'draw';
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mouseout", () => drawing = false);
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineWidth = tool === 'erase' ? 20 : 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = tool === 'erase' ? "#ffffff" : "#000000";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function changeTool(selectedTool) {
+      tool = selectedTool;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  </script>
+
+</body>
+</html>

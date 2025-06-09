@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Use Number Lines and Number Bonds</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #fff9f0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 650px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 6px 12px;
+      margin-top: 10px;
+    }
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    ul {
+      text-align: left;
+      display: inline-block;
+    }
+    .line {
+      font-family: monospace;
+      white-space: pre;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>📏 Use Number Lines and Number Bonds</h1>
+
+    <p><strong>Summary:</strong> Use number lines to count steps, and number bonds to break numbers into parts to help with addition.</p>
+
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li><strong>Number Line:</strong> 3 + 2 → Start at 3, jump 2 steps → <em>Answer: 5</em></li>
+      <li><strong>Number Bond:</strong> 4 + 5 → Break 5 into 1 + 4 → (4 + 4) + 1 = 9</li>
+    </ul>
+
+    <div class="line">
+      Number Line (0 to 20):<br />
+      0‒1‒2‒3‒4‒5‒6‒7‒8‒9‒10‒11‒12‒13‒14‒15‒16‒17‒18‒19‒20
+    </div>
+
+    <div id="question"></div>
+
+    <label>Your Answer:</label><br />
+    <input type="number" id="answer" />
+    <button onclick="checkAnswer()">Submit</button>
+
+    <p id="feedback"></p>
+    <p id="score">Score: 0 / 100</p>
+  </div>
+
+  <script>
+    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    let num1, num2;
+
+    function generateQuestion() {
+      num1 = Math.floor(Math.random() * 11); // 0–10
+      num2 = Math.floor(Math.random() * (10 - num1 + 1)); // keep sum ≤ 10
+      document.getElementById("question").innerText = `What is ${num1} + ${num2}?`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      const correct = num1 + num2;
+      if (userAnswer === correct) {
+        score += 4;
+        currentQuestion++;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 You finished!";
+      }
+    }
+
+    generateQuestion();
+  </script>
+
+</body>
+</html>

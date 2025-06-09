@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Understand the Equal Sign</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #007acc;
+      color: white;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background-color: #007acc;
+      color: white;
+    }
+
+    button:hover {
+      background-color: #005f99;
+    }
+
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    #score {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Understand the Meaning of the Equal Sign</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Summary</h2>
+      <p>The equal sign (=) means "is the same as." It shows that the value on the left side is the same as the value on the right side of an equation.</p>
+    </section>
+
+    <section>
+      <h2>Worked Examples</h2>
+      <ul>
+        <li>3 + 4 = 7 ✅ (True)</li>
+        <li>5 = 2 + 3 ✅ (True)</li>
+        <li>6 + 1 = 9 ❌ (False)</li>
+        <li>4 + 2 = 2 + 4 ✅ (True)</li>
+        <li>7 = 8 - 1 ✅ (True)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Quiz: Is the Equation True?</h2>
+      <p id="question">Loading question...</p>
+      <button onclick="checkAnswer(true)">True</button>
+      <button onclick="checkAnswer(false)">False</button>
+      <p id="feedback"></p>
+      <p id="score">Score: 0</p>
+    </section>
+
+    <script>
+      const questions = [
+        { question: "3 + 4 = 7", correct: true },
+        { question: "5 = 2 + 2", correct: false },
+        { question: "6 = 3 + 3", correct: true },
+        { question: "10 = 5 + 4", correct: false },
+        { question: "2 + 2 = 4", correct: true },
+        { question: "8 = 7 + 1", correct: true },
+        { question: "4 + 1 = 6", correct: false },
+        { question: "6 + 2 = 9", correct: false },
+        { question: "9 = 5 + 4", correct: true },
+        { question: "7 + 1 = 8", correct: true },
+        { question: "3 + 3 = 6", correct: true },
+        { question: "5 + 5 = 11", correct: false },
+        { question: "6 = 2 + 4", correct: false },
+        { question: "4 + 3 = 3 + 4", correct: true },
+        { question: "8 = 4 + 4", correct: true },
+        { question: "10 = 10", correct: true },
+        { question: "7 + 2 = 8", correct: false },
+        { question: "1 + 6 = 7", correct: true },
+        { question: "0 + 9 = 9", correct: true },
+        { question: "2 + 3 = 4", correct: false }
+      ];
+
+      let current = 0;
+      let score = 0;
+
+      function showQuestion() {
+        if (current < questions.length) {
+          document.getElementById("question").innerText = questions[current].question;
+          document.getElementById("feedback").innerText = "";
+        } else {
+          document.getElementById("question").innerText = "🎉 Quiz completed!";
+          document.getElementById("feedback").innerText = `Final Score: ${score} out of ${questions.length}`;
+        }
+      }
+
+      function checkAnswer(answer) {
+        if (answer === questions[current].correct) {
+          score++;
+          document.getElementById("feedback").innerText = "✅ Correct!";
+        } else {
+          document.getElementById("feedback").innerText = "❌ Try again.";
+        }
+        current++;
+        showQuestion();
+        document.getElementById("score").innerText = `Score: ${score}`;
+      }
+
+      window.onload = showQuestion;
+    </script>
+  </main>
+</body>
+</html>

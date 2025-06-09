@@ -7,8 +7,8 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
       text-align: center;
+      background-color: #f9f9f9;
       margin: 0;
       padding: 0;
     }
@@ -32,24 +32,21 @@
       margin-bottom: 30px;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
-      margin: 8px 0;
+    input, select {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
     }
 
     button {
       margin: 10px;
       padding: 10px 20px;
       font-size: 16px;
-      cursor: pointer;
       border: none;
       border-radius: 6px;
       background-color: #007acc;
       color: white;
+      cursor: pointer;
     }
 
     button:hover {
@@ -65,6 +62,12 @@
       margin-top: 10px;
       font-size: 18px;
     }
+
+    canvas {
+      border: 1px solid #aaa;
+      background: #fff;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -75,30 +78,42 @@
   <main>
     <section>
       <h2>Summary</h2>
-      <p>An equation is <strong>true</strong> when both sides have the same value. It's <strong>false</strong> when they do not match.</p>
-      <p>We compare the values on both sides of the equal sign to decide.</p>
+      <p>An equation is <strong>true</strong> if both sides are equal, and <strong>false</strong> if they are not. Check both sides carefully!</p>
     </section>
 
     <section>
       <h2>Worked Examples</h2>
-      <ul>
-        <li>3 + 4 = 7 ✅ True</li>
-        <li>8 = 4 + 4 ✅ True</li>
-        <li>5 + 2 = 10 ❌ False</li>
-        <li>6 = 2 + 5 ❌ False</li>
-        <li>9 = 9 ✅ True</li>
-        <li>1 + 3 = 4 ✅ True</li>
-        <li>4 + 5 = 8 ❌ False</li>
+      <ul style="list-style: none; padding: 0;">
+        <li>3 + 4 = 7 ✅ (True)</li>
+        <li>8 = 4 + 4 ✅ (True)</li>
+        <li>5 + 2 = 10 ❌ (False)</li>
+        <li>6 = 2 + 5 ❌ (False)</li>
+        <li>9 = 9 ✅ (True)</li>
       </ul>
     </section>
 
     <section>
-      <h2>Quiz: Is the Equation True or False?</h2>
+      <h2>Quiz: True or False?</h2>
       <p id="question">Loading question...</p>
       <button onclick="checkAnswer(true)">True</button>
       <button onclick="checkAnswer(false)">False</button>
       <p id="feedback"></p>
       <p id="score">Score: 0</p>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>✏️ Try It Yourself – Draw Your Workings</h2>
+      <canvas id="draw" width="600" height="300"></canvas><br>
+      <label for="color">Choose pencil color:</label>
+      <select id="color">
+        <option value="black">🖤 Black</option>
+        <option value="red">❤️ Red</option>
+        <option value="blue">💙 Blue</option>
+        <option value="green">💚 Green</option>
+      </select>
+      <button onclick="clearCanvas()">🧼 Clear</button>
     </section>
 
     <script>
@@ -151,6 +166,31 @@
       }
 
       window.onload = showQuestion;
+
+      const canvas = document.getElementById("draw");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+      canvas.addEventListener("mouseout", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (!drawing) return;
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+
+      function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
     </script>
   </main>
 </body>

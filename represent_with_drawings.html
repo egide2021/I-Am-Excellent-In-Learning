@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Represent with Drawings and Equations</title>
   <style>
     body {
@@ -32,17 +32,10 @@
       margin-bottom: 30px;
     }
 
-    img {
-      width: 120px;
-      margin-top: 10px;
-    }
-
-    input {
+    input, select {
       padding: 10px;
       font-size: 16px;
-      width: 200px;
       margin-top: 10px;
-      text-align: center;
     }
 
     button {
@@ -60,14 +53,27 @@
       background-color: #005f99;
     }
 
-    #feedback {
-      font-weight: bold;
+    canvas {
+      border: 1px solid #aaa;
+      background: #fff;
       margin-top: 10px;
     }
 
+    #feedback {
+      font-weight: bold;
+    }
+
     #score {
-      margin-top: 10px;
       font-size: 18px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -79,15 +85,14 @@
   <main>
     <section>
       <h2>Summary</h2>
-      <p>We can use drawings like dots, number bonds, or simple shapes to show a problem before writing the equation.</p>
-      <p>This helps us understand what’s happening in the story problem.</p>
+      <p>We can use drawings like dots, shapes, or number bonds to help us solve math problems. Then, we write an equation to match the drawing.</p>
     </section>
 
     <section>
       <h2>Worked Examples</h2>
-      <ul style="list-style: none; padding: 0;">
-        <li>🟢🟢🟢 + 🟢🟢🟢🟢 = 7<br>Equation: 3 + 4 = 7</li><br>
-        <li>🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵 - 🔵🔵🔵 = 7<br>Equation: 10 - 3 = 7</li><br>
+      <ul>
+        <li>🟢🟢🟢 + 🟢🟢🟢🟢 = 7<br>Equation: 3 + 4 = 7</li>
+        <li>🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵 - 🔵🔵🔵 = 7<br>Equation: 10 - 3 = 7</li>
         <li>🐠🐠 + 🐠🐠🐠 = 5<br>Equation: 2 + 3 = 5</li>
       </ul>
     </section>
@@ -95,11 +100,26 @@
     <section>
       <h2>Quiz: What is the Equation?</h2>
       <p id="question">Loading...</p>
-      <input type="text" id="answer" placeholder="Type your equation, e.g. 3 + 4 = 7">
+      <input type="text" id="answer" placeholder="Type the equation (e.g. 3 + 4 = 7)">
       <br>
       <button onclick="checkAnswer()">Submit</button>
       <p id="feedback"></p>
       <p id="score">Score: 0</p>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>✏️ Try It Yourself – Draw Your Workings</h2>
+      <canvas id="draw" width="600" height="300"></canvas><br>
+      <label for="color">Choose pencil color:</label>
+      <select id="color">
+        <option value="black">🖤 Black</option>
+        <option value="red">❤️ Red</option>
+        <option value="blue">💙 Blue</option>
+        <option value="green">💚 Green</option>
+      </select>
+      <button onclick="clearCanvas()">🧼 Clear</button>
     </section>
 
     <script>
@@ -142,6 +162,31 @@
       }
 
       window.onload = showQuestion;
+
+      const canvas = document.getElementById("draw");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+      canvas.addEventListener("mouseout", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (!drawing) return;
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+
+      function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
     </script>
   </main>
 </body>

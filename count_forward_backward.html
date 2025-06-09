@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Count Forward and Backward (0–120)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9faff;
+      padding: 20px;
+    }
+    h1 {
+      color: #007acc;
+      text-align: center;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    #feedback {
+      font-weight: bold;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧮 Count Forward and Backward (0–120)</h1>
+
+  <p><strong>Learning Objective:</strong> Practice counting forward and backward between 0 and 120.</p>
+
+  <div class="question" id="question"></div>
+  <input type="number" id="answer" />
+  <button onclick="checkAnswer()">Submit</button>
+
+  <p id="feedback"></p>
+  <p id="score">Score: 0 / 100</p>
+
+  <script>
+    let score = 0;
+    let totalQuestions = 10;
+    let currentQuestion = 0;
+    let missingNumber, sequence;
+
+    function generateQuestion() {
+      let start = Math.floor(Math.random() * 111); // from 0 to 110
+      let step = Math.random() < 0.5 ? 1 : -1; // forward or backward
+      sequence = [start, start + step, start + step * 2];
+
+      // Hide one of them
+      let missingIndex = Math.floor(Math.random() * 3);
+      missingNumber = sequence[missingIndex];
+      let display = sequence.map((num, i) => i === missingIndex ? "___" : num).join(", ");
+
+      document.getElementById("question").innerText = `What number completes this sequence? ${display}`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      if (userAnswer === missingNumber) {
+        currentQuestion++;
+        score += 10;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 Quiz Complete!";
+      }
+    }
+
+    // Initial question
+    generateQuestion();
+  </script>
+
+</body>
+</html>

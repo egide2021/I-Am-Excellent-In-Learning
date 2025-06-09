@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Count Back</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #fff0f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 6px 12px;
+      margin-top: 10px;
+    }
+    #feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    ul {
+      text-align: left;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🔙 Count Back</h1>
+
+    <p><strong>Summary:</strong> Use counting backward to subtract numbers. Start from the first number and count back the second number.</p>
+
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li>5 − 2 → Count back 2 steps: 5, 4, 3 → <em>Answer: 3</em></li>
+      <li>8 − 3 → 8, 7, 6, 5 → <em>Answer: 5</em></li>
+    </ul>
+
+    <div id="question"></div>
+
+    <label>Your Answer:</label><br />
+    <input type="number" id="answer" />
+    <button onclick="checkAnswer()">Submit</button>
+
+    <p id="feedback"></p>
+    <p id="score">Score: 0 / 100</p>
+  </div>
+
+  <script>
+    let score = 0, totalQuestions = 25, currentQuestion = 0;
+    let num1, num2;
+
+    function generateQuestion() {
+      num1 = Math.floor(Math.random() * 6) + 5; // 5 to 10
+      num2 = Math.floor(Math.random() * 6);     // 0 to 5
+      if (num2 > num1) num2 = num1;             // ensure valid subtraction
+      document.getElementById("question").innerText = `What is ${num1} − ${num2}?`;
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      const correct = num1 - num2;
+      if (userAnswer === correct) {
+        score += 4;
+        currentQuestion++;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = "❌ Try again!";
+      }
+
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        setTimeout(generateQuestion, 1000);
+      } else {
+        document.getElementById("feedback").innerText += " 🎉 All done!";
+      }
+    }
+
+    generateQuestion();
+  </script>
+
+</body>
+</html>

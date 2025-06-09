@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tell and Write Time</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f9ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 700px;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+    }
+    h2, h3 { color: #007acc; }
+    canvas {
+      border: 1px solid #000;
+      background: #fff;
+      margin-top: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .color-picker button {
+      margin: 2px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    input[type="text"] {
+      padding: 5px;
+      width: 80%;
+      max-width: 300px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Tell and Write Time to the Hour and Half Hour</h2>
+
+  <h3>🔹 Summary</h3>
+  <p>We can tell time by looking at the clock. The short hand shows the hour. The long hand shows the minutes.</p>
+  <button onclick="speak('We can tell time by looking at the clock. The short hand shows the hour. The long hand shows the minutes.')">🔊 Play</button>
+
+  <h3>🔹 Examples</h3>
+  <p>This is 3 o’clock:</p>
+  <canvas id="clock1" width="150" height="150"></canvas>
+  <button onclick="speak('This is three o clock')">🔊 Play</button>
+
+  <p>This is 6:30:</p>
+  <canvas id="clock2" width="150" height="150"></canvas>
+  <button onclick="speak('This is six thirty')">🔊 Play</button>
+
+  <h3>🔹 Analog and Digital Clocks Animation</h3>
+  <canvas id="liveClock" width="150" height="150"></canvas>
+  <p id="digitalClock" style="font-size: 1.5em; font-weight: bold;"></p>
+
+  <h3>🔹 Quiz</h3>
+  <p id="question"></p>
+  <input type="text" id="answer">
+  <button onclick="checkAnswer()">Submit</button>
+  <p id="feedback"></p>
+  <p id="score">Score: 0 / 100</p>
+
+  <h3>🔹 Drawing Space</h3>
+  <div class="color-picker">
+    <button style="background:red" onclick="setColor('red')"></button>
+    <button style="background:blue" onclick="setColor('blue')"></button>
+    <button style="background:green" onclick="setColor('green')"></button>
+    <button style="background:black" onclick="setColor('black')"></button>
+  </div>
+  <canvas id="drawCanvas" width="400" height="200"></canvas>
+</div>
+
+<script>
+  function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(msg);
+  }
+
+  function drawClock(canvasId, hour, minute) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext("2d");
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 60, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    const hourAngle = ((hour % 12) + minute / 60) * 30 * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + 30 * Math.cos(hourAngle - Math.PI/2), centerY + 30 * Math.sin(hourAngle - Math.PI/2));
+    ctx.stroke();
+
+    const minuteAngle = minute * 6 * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + 45 * Math.cos(minuteAngle - Math.PI/2), centerY + 45 * Math.sin(minuteAngle - Math.PI/2));
+    ctx.stroke();
+  }
+
+  drawClock("clock1", 3, 0);
+  drawClock("clock2", 6, 30);
+
+  function drawLiveClock() {
+    const now = new Date();
+    const canvas = document.getElementById("liveClock");
+    const ctx = canvas.getContext("2d");
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 60, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    let hour = now.getHours();
+    let minute = now.getMinutes();
+    let second = now.getSeconds();
+
+    const hourAngle = ((hour % 12) + minute / 60) * 30 * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + 30 * Math.cos(hourAngle - Math.PI/2), centerY + 30 * Math.sin(hourAngle - Math.PI/2));
+    ctx.stroke();
+
+    const minuteAngle = minute * 6 * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + 45 * Math.cos(minuteAngle - Math.PI/2), centerY + 45 * Math.sin(minuteAngle - Math.PI/2));
+    ctx.stroke();
+
+    const secondAngle = second * 6 * Math.PI / 180;
+    ctx.beginPath();
+    ctx.strokeStyle = "red";
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + 50 * Math.cos(secondAngle - Math.PI/2), centerY + 50 * Math.sin(secondAngle - Math.PI/2));
+    ctx.stroke();
+    ctx.strokeStyle = "black";
+
+    const digital = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById("digitalClock").innerText = digital;
+  }
+
+  setInterval(drawLiveClock, 1000);
+
+  const canvas = document.getElementById("drawCanvas");
+  const ctx = canvas.getContext("2d");
+  let drawing = false;
+  let currentColor = "black";
+
+  canvas.addEventListener("mousedown", () => drawing = true);
+  canvas.addEventListener("mouseup", () => {
+    drawing = false;
+    ctx.beginPath();
+  });
+  canvas.addEventListener("mousemove", draw);
+
+  function draw(e) {
+    if (!drawing) return;
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+  }
+
+  function setColor(color) {
+    currentColor = color;
+    ctx.beginPath();
+  }
+
+  let score = 0;
+  let currentQuestion = 0;
+  const totalQuestions = 5;
+  const quizData = [
+    { q: "What time is shown if the short hand is on 2 and long hand is on 12?", a: "2:00" },
+    { q: "What time is it when the short hand is between 4 and 5 and long hand is on 6?", a: "4:30" },
+    { q: "What time is it if the short hand is on 7 and long hand is on 12?", a: "7:00" },
+    { q: "What time is it when short hand is between 10 and 11 and long hand is on 6?", a: "10:30" },
+    { q: "What time is it if the short hand is on 9 and the long hand is on 12?", a: "9:00" }
+  ];
+
+  function generateQuestion() {
+    document.getElementById("question").innerText = quizData[currentQuestion].q;
+    document.getElementById("answer").value = "";
+    document.getElementById("feedback").innerText = "";
+  }
+
+  function checkAnswer() {
+    const userAnswer = document.getElementById("answer").value.trim();
+    if (userAnswer === quizData[currentQuestion].a) {
+      score++;
+      document.getElementById("feedback").innerText = "✅ Correct!";
+    } else {
+      document.getElementById("feedback").innerText = `❌ Incorrect. The correct answer is ${quizData[currentQuestion].a}`;
+    }
+    currentQuestion++;
+    if (currentQuestion < totalQuestions) {
+      generateQuestion();
+    } else {
+      const finalScore = Math.round((score / totalQuestions) * 100);
+      document.getElementById("question").innerText = "Quiz Finished!";
+      document.getElementById("score").innerText = `Final Score: ${finalScore} / 100`;
+    }
+  }
+
+  generateQuestion();
+</script>
+</body>
+</html>

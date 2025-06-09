@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Identify and Name 2D Shapes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fdfdfd;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .shapes {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .shape {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .circle { border-radius: 50%; }
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 100px solid #000;
+    }
+    .canvas-tools {
+      margin-top: 10px;
+    }
+    canvas {
+      border: 1px solid #000;
+      margin-top: 10px;
+    }
+    button.audio {
+      margin-left: 10px;
+      background: #ddd;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔺 Identify and Name 2D Shapes 
+    <button class="audio" onclick="speak('Let us learn how to identify and name 2D shapes like circle, square, triangle and rectangle.')">🔊</button>
+  </h1>
+
+  <h2>📝 Summary: 
+    <button class="audio" onclick="speak('2D shapes are flat and can be drawn on paper. Some common 2D shapes are: Circle – no sides or corners. Square – 4 equal sides and 4 corners. Triangle – 3 sides and 3 corners. Rectangle – 4 sides and 4 corners with 2 long and 2 short sides.')">🔊</button>
+  </h2>
+  <ul>
+    <li><strong>Circle</strong> – no sides or corners</li>
+    <li><strong>Square</strong> – 4 equal sides and 4 corners</li>
+    <li><strong>Triangle</strong> – 3 sides and 3 corners</li>
+    <li><strong>Rectangle</strong> – 4 sides and 4 corners (2 long, 2 short)</li>
+  </ul>
+
+  <h2>🔍 Examples: 
+    <button class="audio" onclick="speak('Here are some examples of 2D shapes: a circle, a triangle, a square, and a rectangle.')">🔊</button>
+  </h2>
+  <div class="shapes">
+    <div class="shape circle">Circle</div>
+    <div class="shape" style="background: none; border: none;">
+      <div class="triangle"></div>
+    </div>
+    <div class="shape">Square</div>
+    <div class="shape" style="width: 150px;">Rectangle</div>
+  </div>
+
+  <h2>🧠 Quiz:
+    <button class="audio" onclick="speak('Quiz time! Which shape has 3 sides? Type your answer in the box below.')">🔊</button>
+  </h2>
+  <p>Which shape has 3 sides?</p>
+  <input type="text" id="shape-answer" placeholder="Type your answer">
+  <button onclick="checkShape()">Submit</button>
+  <p id="quiz-feedback"></p>
+
+  <h2>✏️ Try Drawing a Shape:
+    <button class="audio" onclick="speak('Try drawing a 2D shape using the pencil tool. You can also erase or clear the drawing.')">🔊</button>
+  </h2>
+  <div class="canvas-tools">
+    <button onclick="changeTool('draw')">✏️ Pencil</button>
+    <button onclick="changeTool('erase')">🧽 Eraser</button>
+    <button onclick="clearCanvas()">🗑️ Clear</button>
+  </div>
+  <canvas id="drawingCanvas" width="300" height="300"></canvas>
+
+  <!-- JS: Quiz, Drawing, Audio -->
+  <script>
+    function checkShape() {
+      const ans = document.getElementById("shape-answer").value.toLowerCase();
+      const feedback = document.getElementById("quiz-feedback");
+      if (ans.includes("triangle")) {
+        feedback.innerText = "✅ Correct!";
+        speak("Correct! A triangle has 3 sides.");
+      } else {
+        feedback.innerText = "❌ Try again. It is a triangle.";
+        speak("Oops! The correct answer is triangle.");
+      }
+    }
+
+    const canvas = document.getElementById("drawingCanvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let tool = 'draw';
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mouseout", () => drawing = false);
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineWidth = tool === 'erase' ? 20 : 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = tool === 'erase' ? "#ffffff" : "#000000";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function changeTool(selectedTool) {
+      tool = selectedTool;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Speech synthesis for audio support
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(msg);
+    }
+  </script>
+
+</body>
+</html>

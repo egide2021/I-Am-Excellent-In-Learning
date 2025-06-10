@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Counting: Number Names to 100</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-color: #f5faff;
+    }
+
+    h1 {
+      color: #007acc;
+    }
+
+    .summary {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .speaker {
+      cursor: pointer;
+      font-size: 20px;
+      margin-left: 8px;
+      color: #007acc;
+    }
+
+    .quiz-section {
+      margin-top: 30px;
+    }
+
+    .question {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      font-size: 16px;
+      width: 300px;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      margin: 20px auto;
+      display: block;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background-color: #007acc;
+      color: white;
+    }
+
+    #score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔡 Number Names to 100</h1>
+
+  <div class="summary">
+    <span>Let’s practice writing number names! Example: 14 is fourteen.</span>
+    <span class="speaker" onclick="speakText('Let’s practice writing number names. For example, 14 is fourteen.')">🔊</span>
+  </div>
+
+  <div class="quiz-section">
+    <div class="question" id="question">Loading question...</div>
+    <span class="speaker" id="speakQuestion">🔊</span><br><br>
+    <input type="text" id="answer" placeholder="Type the number name" />
+    <button onclick="checkAnswer()">Submit</button>
+    <div id="feedback"></div>
+    <div id="score">Score: 0 / 100</div>
+  </div>
+
+  <canvas id="drawingCanvas" width="400" height="200"></canvas><br />
+  <button onclick="clearCanvas()">🧽 Erase Drawing</button>
+  <button onclick="window.print()">🖨️ Print This Page</button>
+
+  <script>
+    // Number name map (0–100 simplified)
+    const numberNames = {
+      0: "zero", 1: "one", 2: "two", 3: "three", 4: "four", 5: "five",
+      6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten",
+      11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen", 15: "fifteen",
+      16: "sixteen", 17: "seventeen", 18: "eighteen", 19: "nineteen", 20: "twenty",
+      30: "thirty", 40: "forty", 50: "fifty", 60: "sixty", 70: "seventy",
+      80: "eighty", 90: "ninety", 100: "one hundred"
+    };
+
+    function getNumberName(n) {
+      if (numberNames[n]) return numberNames[n];
+      if (n < 100) {
+        const tens = Math.floor(n / 10) * 10;
+        const ones = n % 10;
+        return numberNames[tens] + "-" + numberNames[ones];
+      }
+      return "";
+    }
+
+    // Drawing canvas
+    const canvas = document.getElementById("drawingCanvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "black";
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Audio
+    function speakText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    }
+
+    // Quiz
+    let score = 0;
+    let totalQuestions = 10;
+    let currentQuestion = 0;
+    let correctNumber = 0;
+
+    function generateQuestion() {
+      correctNumber = Math.floor(Math.random() * 91) + 10; // 10 to 100
+      const questionText = `What is the name of the number ${correctNumber}?`;
+      document.getElementById("question").innerText = questionText;
+      document.getElementById("speakQuestion").onclick = () => speakText(questionText);
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userInput = document.getElementById("answer").value.trim().toLowerCase();
+      const correct = getNumberName(correctNumber);
+      if (userInput === correct) {
+        score += 10;
+        document.getElementById("feedback").innerText = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").innerText = `❌ Try again. Correct answer was "${correct}"`;
+      }
+
+      currentQuestion++;
+      document.getElementById("score").innerText = `Score: ${score} / 100`;
+
+      if (currentQuestion < totalQuestions) {
+        generateQuestion();
+      } else {
+        document.getElementById("question").innerText = "🎉 Test complete!";
+        document.getElementById("speakQuestion").onclick = () => speakText("Test complete!");
+      }
+    }
+
+    generateQuestion();
+  </script>
+
+</body>
+</html>

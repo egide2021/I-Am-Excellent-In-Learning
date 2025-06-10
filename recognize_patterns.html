@@ -3,133 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recognize and Create Patterns</title>
+  <title>Recognize and Create Repeating Patterns</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #fffef2;
-      padding: 20px;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 0;
     }
-    h1, h2 {
-      color: #333;
+
+    .container {
+      text-align: center;
+      padding: 30px 20px;
     }
-    .pattern-examples {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-bottom: 20px;
+
+    h1, h2, h3, p {
+      margin: 10px 0;
     }
-    .pattern-row {
-      font-size: 24px;
-      background: #f8f8f8;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 1px 1px 5px #ccc;
+
+    ul {
+      list-style: none;
+      padding: 0;
     }
-    canvas {
-      border: 1px solid #000;
+
+    input[type="text"] {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 8px 12px;
+      font-size: 16px;
       margin-top: 10px;
-    }
-    button.audio {
-      margin-left: 10px;
-      background: #ddd;
-      border: none;
-      padding: 4px 8px;
       cursor: pointer;
-      font-size: 14px;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>🎲 Recognize and Create Repeating Patterns</h1>
 
-  <h1>🎲 Recognize and Create Repeating Patterns
-    <button class="audio" onclick="speak('Today we are going to learn about repeating patterns like AB, AAB, ABB, and ABC.')">🔊</button>
-  </h1>
+    <p>Patterns repeat in a certain order. Let's look at this example:</p>
+    <p>🔵 🔴 🔵 🔴 🔵 ... What comes next? (Answer: 🔴)</p>
 
-  <h2>📝 Summary:
-    <button class="audio" onclick="speak('A pattern repeats over and over. It can be made with colors, shapes, sounds, or objects. Some common types are AB, AAB, ABB, and ABC.')">🔊</button>
-  </h2>
-  <p>A pattern is a sequence that repeats. Here are some simple repeating patterns:</p>
+    <h2>Examples:</h2>
+    <p>🟢 🟢 🔺 🔺 🟢 🟢 🔺 🔺 ...</p>
+    <p>⬛ ⬛ ⬜ ⬛ ⬛ ⬜ ...</p>
 
-  <h2>🔍 Examples:
-    <button class="audio" onclick="speak('Let’s look at some pattern examples. Try to say what comes next.')">🔊</button>
-  </h2>
-  <div class="pattern-examples">
-    <div class="pattern-row">🔴 🔵 🔴 🔵 🔴 🔵 <strong>(AB)</strong></div>
-    <div class="pattern-row">🟢 🟢 🔵 🟢 🟢 🔵 <strong>(AAB)</strong></div>
-    <div class="pattern-row">🔴 🔵 🔵 🔴 🔵 🔵 <strong>(ABB)</strong></div>
-    <div class="pattern-row">🟡 🔵 🟢 🔴 🟡 🔵 🟢 🔴 <strong>(ABCD)</strong></div>
+    <div class="quiz">
+      <h3>Quiz: What comes next?</h3>
+      <p>🔺 🟡 🔺 🟡 🔺 ?</p>
+      <input type="text" id="answer" placeholder="Your answer (emoji or text)">
+      <br>
+      <button onclick="checkAnswer()">Submit</button>
+      <p id="feedback"></p>
+    </div>
+
+    <h2>✏️ Practice Drawing Space</h2>
+    <canvas id="drawingCanvas" width="300" height="200"></canvas>
+    <br>
+    <button onclick="clearCanvas()">Clear</button>
   </div>
-
-  <h2>🧠 Quiz:
-    <button class="audio" onclick="speak('Quiz time! What comes next in this pattern? Red, blue, red, blue...')">🔊</button>
-  </h2>
-  <p>What comes next? 🔴 🔵 🔴 🔵</p>
-  <input type="text" id="pattern-answer" placeholder="Use emoji or type color (e.g. red)">
-  <button onclick="checkPattern()">Submit</button>
-  <p id="quiz-feedback"></p>
-
-  <h2>✏️ Try Making Your Own Pattern:
-    <button class="audio" onclick="speak('Now draw your own repeating pattern using the pencil. Try AB or AAB.')">🔊</button>
-  </h2>
-  <div class="canvas-tools">
-    <button onclick="changeTool('draw')">✏️ Pencil</button>
-    <button onclick="changeTool('erase')">🧽 Eraser</button>
-    <button onclick="clearCanvas()">🗑️ Clear</button>
-  </div>
-  <canvas id="drawingCanvas" width="300" height="300"></canvas>
 
   <script>
-    function speak(text) {
-      const msg = new SpeechSynthesisUtterance(text);
-      window.speechSynthesis.speak(msg);
-    }
-
-    function checkPattern() {
-      const ans = document.getElementById("pattern-answer").value.toLowerCase();
-      const feedback = document.getElementById("quiz-feedback");
-      if (ans.includes("🔴") || ans.includes("red")) {
-        feedback.innerText = "✅ Correct! The pattern repeats red next.";
-        speak("Correct! The pattern repeats red.");
+    function checkAnswer() {
+      const userAnswer = document.getElementById('answer').value.trim();
+      const correctAnswer = "🟡";
+      const feedback = document.getElementById('feedback');
+      if (userAnswer === correctAnswer) {
+        feedback.textContent = "✅ Correct!";
       } else {
-        feedback.innerText = "❌ Try again. The next shape is red.";
-        speak("Oops. The answer is red.");
+        feedback.textContent = "❌ Try again!";
       }
     }
 
-    const canvas = document.getElementById("drawingCanvas");
-    const ctx = canvas.getContext("2d");
+    // Drawing functionality
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
     let drawing = false;
-    let tool = 'draw';
 
-    canvas.addEventListener("mousedown", () => drawing = true);
-    canvas.addEventListener("mouseup", () => {
-      drawing = false;
-      ctx.beginPath();
-    });
-    canvas.addEventListener("mouseout", () => drawing = false);
-    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseout', () => drawing = false);
+    canvas.addEventListener('mousemove', draw);
 
-    function draw(e) {
+    function draw(event) {
       if (!drawing) return;
       const rect = canvas.getBoundingClientRect();
-      ctx.lineWidth = tool === 'erase' ? 20 : 2;
-      ctx.lineCap = "round";
-      ctx.strokeStyle = tool === 'erase' ? "#ffffff" : "#000000";
-      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#000';
+      ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
       ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-    }
-
-    function changeTool(selectedTool) {
-      tool = selectedTool;
+      ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
     }
 
     function clearCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
     }
   </script>
-
 </body>
 </html>

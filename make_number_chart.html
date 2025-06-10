@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Make a Number Chart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-color: #f5faff;
+    }
+
+    h1 {
+      color: #007acc;
+    }
+
+    .summary {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .speaker {
+      cursor: pointer;
+      font-size: 20px;
+      margin-left: 8px;
+      color: #007acc;
+    }
+
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+
+    td {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ccc;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      margin: 20px auto;
+      display: block;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background-color: #007acc;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📊 Make a Number Chart</h1>
+
+  <div class="summary">
+    <span>Build a number chart from 1 to 100! Look for patterns across rows and columns.</span>
+    <span class="speaker" onclick="speakText('Build a number chart from 1 to 100. Look for patterns across rows and columns.')">🔊</span>
+  </div>
+
+  <div id="chartContainer"></div>
+
+  <canvas id="drawingCanvas" width="400" height="200"></canvas><br />
+  <button onclick="clearCanvas()">🧽 Erase Drawing</button>
+  <button onclick="window.print()">🖨️ Print This Page</button>
+
+  <script>
+    // Drawing Canvas
+    const canvas = document.getElementById("drawingCanvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "black";
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Audio
+    function speakText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    }
+
+    // Number Chart
+    function createNumberChart(rows = 10, cols = 10) {
+      const table = document.createElement("table");
+      let count = 1;
+
+      for (let r = 0; r < rows; r++) {
+        const tr = document.createElement("tr");
+        for (let c = 0; c < cols; c++) {
+          const td = document.createElement("td");
+          td.innerText = count;
+          tr.appendChild(td);
+          count++;
+        }
+        table.appendChild(tr);
+      }
+
+      document.getElementById("chartContainer").appendChild(table);
+    }
+
+    createNumberChart();
+  </script>
+
+</body>
+</html>

@@ -17,40 +17,41 @@
       padding: 30px 20px;
     }
 
-    h1, h2, h3, p {
-      margin: 10px 0;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
+    button {
+      padding: 8px 12px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
     }
 
     input[type="text"] {
       padding: 8px;
       font-size: 16px;
-    }
-
-    button {
-      padding: 8px 12px;
-      font-size: 16px;
-      margin-top: 10px;
-      cursor: pointer;
+      width: 200px;
+      margin-top: 5px;
     }
 
     canvas {
       border: 1px solid #ccc;
-      margin-top: 20px;
+      margin: 10px auto;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
+    }
+
+    .color-btn {
+      width: 30px;
+      height: 30px;
+      border: 2px solid #333;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>🎲 Recognize and Create Repeating Patterns</h1>
-
+    <button onclick="speakText('Recognize and create repeating patterns. Patterns repeat in a certain order.')">🔊 Play Audio</button>
     <p>Patterns repeat in a certain order. Let's look at this example:</p>
     <p>🔵 🔴 🔵 🔴 🔵 ... What comes next? (Answer: 🔴)</p>
 
@@ -58,53 +59,97 @@
     <p>🟢 🟢 🔺 🔺 🟢 🟢 🔺 🔺 ...</p>
     <p>⬛ ⬛ ⬜ ⬛ ⬛ ⬜ ...</p>
 
-    <div class="quiz">
-      <h3>Quiz: What comes next?</h3>
-      <p>🔺 🟡 🔺 🟡 🔺 ?</p>
-      <input type="text" id="answer" placeholder="Your answer (emoji or text)">
-      <br>
-      <button onclick="checkAnswer()">Submit</button>
-      <p id="feedback"></p>
-    </div>
+    <h2>🧠 Quiz: What comes next?</h2>
+    <p>Answer all 10 questions. Each is worth 10 points.</p>
+    <div id="quiz-area"></div>
+    <button onclick="submitQuiz()">Submit Quiz</button>
+    <p id="quiz-score"></p>
 
     <h2>✏️ Practice Drawing Space</h2>
-    <canvas id="drawingCanvas" width="300" height="200"></canvas>
-    <br>
-    <button onclick="clearCanvas()">Clear</button>
+    <div>
+      <div>
+        <span class="color-btn" style="background:red;" onclick="setColor('red')"></span>
+        <span class="color-btn" style="background:blue;" onclick="setColor('blue')"></span>
+        <span class="color-btn" style="background:green;" onclick="setColor('green')"></span>
+        <span class="color-btn" style="background:black;" onclick="setColor('black')"></span>
+        <span class="color-btn" style="background:white; border: 2px dashed #000;" onclick="setColor('white')" title="Eraser"></span>
+      </div>
+      <canvas id="drawingCanvas" width="300" height="200"></canvas>
+      <button onclick="clearCanvas()">Clear All</button>
+    </div>
   </div>
 
   <script>
-    function checkAnswer() {
-      const userAnswer = document.getElementById('answer').value.trim();
-      const correctAnswer = "🟡";
-      const feedback = document.getElementById('feedback');
-      if (userAnswer === correctAnswer) {
-        feedback.textContent = "✅ Correct!";
-      } else {
-        feedback.textContent = "❌ Try again!";
-      }
+    // 🔊 Text-to-Speech
+    function speakText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
     }
 
-    // Drawing functionality
+    // 🎯 Quiz Logic
+    const questions = [
+      { pattern: "🔺 🟡 🔺 🟡 🔺", answer: "🟡" },
+      { pattern: "⬛ ⬜ ⬛ ⬜ ⬛", answer: "⬜" },
+      { pattern: "🔵 🟢 🔵 🟢 🔵", answer: "🟢" },
+      { pattern: "🟡 🟡 🔺 🔺 🟡 🟡", answer: "🔺" },
+      { pattern: "🟣 🟣 🟡 🟣 🟣 🟡", answer: "🟣" },
+      { pattern: "🔴 🔵 🔴 🔵 🔴", answer: "🔵" },
+      { pattern: "⬜ ⬜ ⬛ ⬜ ⬜ ⬛", answer: "⬜" },
+      { pattern: "🟢 🔺 🟢 🔺 🟢", answer: "🔺" },
+      { pattern: "🔴 🔴 🟡 🔴 🔴 🟡", answer: "🔴" },
+      { pattern: "🔵 🔵 🔴 🔵 🔵 🔴", answer: "🔵" }
+    ];
+
+    function loadQuiz() {
+      const quizArea = document.getElementById('quiz-area');
+      quizArea.innerHTML = "";
+      questions.forEach((q, index) => {
+        quizArea.innerHTML += `
+          <p>Q${index + 1}: ${q.pattern} ?</p>
+          <input type="text" id="q${index}" placeholder="Answer">
+        `;
+      });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      questions.forEach((q, i) => {
+        const userAns = document.getElementById(`q${i}`).value.trim();
+        if (userAns === q.answer) score += 10;
+      });
+      document.getElementById('quiz-score').textContent = `🎉 Your Score: ${score} / 100`;
+    }
+
+    loadQuiz();
+
+    // ✏️ Drawing
     const canvas = document.getElementById('drawingCanvas');
     const ctx = canvas.getContext('2d');
     let drawing = false;
+    let drawColor = 'black';
 
     canvas.addEventListener('mousedown', () => drawing = true);
-    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseup', () => {
+      drawing = false;
+      ctx.beginPath();
+    });
     canvas.addEventListener('mouseout', () => drawing = false);
     canvas.addEventListener('mousemove', draw);
 
     function draw(event) {
       if (!drawing) return;
       const rect = canvas.getBoundingClientRect();
-      ctx.lineWidth = 2;
+      ctx.lineWidth = drawColor === 'white' ? 10 : 2;
       ctx.lineCap = 'round';
-      ctx.strokeStyle = '#000';
+      ctx.strokeStyle = drawColor;
       ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
       ctx.stroke();
       ctx.beginPath();
       ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
+    }
+
+    function setColor(color) {
+      drawColor = color;
     }
 
     function clearCanvas() {

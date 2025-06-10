@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skip Count by 2s, 5s, and 10s</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #e6f2ff;
+    }
+    canvas {
+      border: 2px solid #007acc;
+      background: #fff;
+      margin-top: 10px;
+    }
+    .tools button {
+      margin: 5px;
+    }
+    .tools label {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧮 Skip Count by 2s, 5s, and 10s</h1>
+    <p>Practice counting in groups and boost your math skills!</p>
+    <audio controls>
+      <source src="lesson_audio.mp3" type="audio/mp3">
+      Your browser does not support audio playback.
+    </audio>
+  </header>
+
+  <main>
+    <section>
+      <h2>📝 Lesson Summary</h2>
+      <p>Skip counting is counting forward or backward by a number other than 1.</p>
+      <ul>
+        <li><strong>By 2s:</strong> 2, 4, 6, 8, 10...</li>
+        <li><strong>By 5s:</strong> 5, 10, 15, 20...</li>
+        <li><strong>By 10s:</strong> 10, 20, 30, 40...</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🧪 Quiz (20 Questions)</h2>
+      <form id="quiz-form"></form>
+      <button onclick="checkQuiz()">Submit Quiz</button>
+      <p id="score-output"></p>
+    </section>
+
+    <section>
+      <h2>✏️ Work Area</h2>
+      <div class="tools">
+        <label>Choose Color: <input type="color" id="colorPicker" value="#007acc"></label>
+        <button onclick="clearCanvas()">Clear</button>
+      </div>
+      <canvas id="canvas" width="600" height="400"></canvas>
+    </section>
+
+    <section>
+      <h2>📄 Download PDF Worksheet</h2>
+      <p><a href="grade2_skip_counting_worksheet.pdf" download>Download Printable Worksheet (PDF)</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 I Am Excellent In Learning</p>
+  </footer>
+
+  <script>
+    const questions = [
+      "1. What comes after 2, 4, 6, 8, ___?",
+      "2. What comes after 5, 10, 15, ___?",
+      "3. Fill in: 10, 20, ___, 40",
+      "4. What comes before 12 in 4, 8, ___, 16?",
+      "5. What is next: 30, 35, 40, ___?",
+      "6. Skip count by 2s: 14, 16, 18, ___",
+      "7. What comes before 50 in 40, ___, 60?",
+      "8. Fill in: ___, 10, 15, 20",
+      "9. Skip by 10s: 70, ___, 90",
+      "10. 5th number by 2s from 0?",
+      "11. 100, 90, 80, ___",
+      "12. 3, 6, 9, 12, ___",
+      "13. 4, 8, 12, ___, 20",
+      "14. 6th number by 5s from 5?",
+      "15. 10, 20, ___, 40, 50",
+      "16. 0, 3, ___ (next)?",
+      "17. ___, 2, 4, 6, 8",
+      "18. 100, 95, 90, ___",
+      "19. 7th term in 5, 10, 15...?",
+      "20. 8, ___, 16, 20"
+    ];
+
+    const answers = [
+      "10", "20", "30", "12", "45",
+      "20", "45", "5", "80", "8",
+      "70", "15", "16", "30", "30",
+      "6", "0", "85", "35", "12"
+    ];
+
+    const form = document.getElementById("quiz-form");
+
+    questions.forEach((q, i) => {
+      const label = document.createElement("label");
+      label.innerHTML = q + ' <input type="number" id="q' + i + '" /><br><br>';
+      form.appendChild(label);
+    });
+
+    function checkQuiz() {
+      let score = 0;
+      answers.forEach((ans, i) => {
+        const val = document.getElementById("q" + i).value;
+        if (val == ans) score++;
+      });
+      const percentage = Math.round((score / answers.length) * 100);
+      document.getElementById("score-output").innerText = `You scored ${percentage}% (${score}/20)`;
+    }
+
+    // Drawing
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let painting = false;
+
+    canvas.addEventListener("mousedown", () => painting = true);
+    canvas.addEventListener("mouseup", () => {
+      painting = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!painting) return;
+      const rect = canvas.getBoundingClientRect();
+      const color = document.getElementById("colorPicker").value;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  </script>
+</body>
+</html>

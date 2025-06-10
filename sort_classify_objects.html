@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sort and Classify Objects</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fffaf0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    button {
+      padding: 8px 12px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      font-size: 16px;
+      width: 200px;
+      margin-top: 5px;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      margin: 10px auto;
+      display: block;
+    }
+
+    .color-btn {
+      width: 30px;
+      height: 30px;
+      border: 2px solid #333;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧺 Sort and Classify Objects</h1>
+    <button onclick="speakText('Let us learn how to sort and classify objects by color, shape, and size.')">🔊 Play Audio</button>
+    
+    <p>We can sort objects by:</p>
+    <p>🎨 Color: Red, blue, green...</p>
+    <p>🔷 Shape: Circle, square, triangle...</p>
+    <p>📏 Size: Big, small, tall, short...</p>
+
+    <h2>🧠 Quiz: Choose what comes next</h2>
+    <p>Answer all 10 questions. Each correct answer gives 10 points.</p>
+    <div id="quiz-area"></div>
+    <button onclick="submitQuiz()">Submit Quiz</button>
+    <p id="quiz-score"></p>
+
+    <h2>✏️ Practice Drawing Space</h2>
+    <div>
+      <div>
+        <span class="color-btn" style="background:red;" onclick="setColor('red')"></span>
+        <span class="color-btn" style="background:blue;" onclick="setColor('blue')"></span>
+        <span class="color-btn" style="background:green;" onclick="setColor('green')"></span>
+        <span class="color-btn" style="background:black;" onclick="setColor('black')"></span>
+        <span class="color-btn" style="background:white; border: 2px dashed #000;" onclick="setColor('white')" title="Eraser"></span>
+      </div>
+      <canvas id="drawingCanvas" width="300" height="200"></canvas>
+      <button onclick="clearCanvas()">Clear All</button>
+    </div>
+  </div>
+
+  <script>
+    // 🔊 Text-to-Speech
+    function speakText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    }
+
+    // 🎯 Quiz Logic
+    const questions = [
+      { pattern: "🍎 🍌 🍎 🍌", answer: "🍎" },
+      { pattern: "🔴 🔵 🔴 🔵", answer: "🔴" },
+      { pattern: "🔺 🔺 🔵 🔺 🔺", answer: "🔵" },
+      { pattern: "🟥 🟩 🟥 🟩", answer: "🟥" },
+      { pattern: "⭐ ⭐ 🔷 ⭐ ⭐", answer: "🔷" },
+      { pattern: "⚫ ⚫ ⚪ ⚫ ⚫", answer: "⚪" },
+      { pattern: "🔵 🔴 🔵 🔴", answer: "🔵" },
+      { pattern: "🟢 🟡 🟢 🟡", answer: "🟢" },
+      { pattern: "🟣 🟠 🟣 🟠", answer: "🟣" },
+      { pattern: "⬛ ⬜ ⬛ ⬜", answer: "⬛" },
+    ];
+
+    function loadQuiz() {
+      const quizArea = document.getElementById('quiz-area');
+      quizArea.innerHTML = "";
+      questions.forEach((q, index) => {
+        quizArea.innerHTML += `
+          <p>Q${index + 1}: ${q.pattern} ?</p>
+          <input type="text" id="q${index}" placeholder="Answer">
+        `;
+      });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      questions.forEach((q, i) => {
+        const userAns = document.getElementById(`q${i}`).value.trim();
+        if (userAns === q.answer) score += 10;
+      });
+      document.getElementById('quiz-score').textContent = `🎉 Your Score: ${score} / 100`;
+    }
+
+    loadQuiz();
+
+    // ✏️ Drawing
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let drawColor = 'black';
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => {
+      drawing = false;
+      ctx.beginPath();
+    });
+    canvas.addEventListener('mouseout', () => drawing = false);
+    canvas.addEventListener('mousemove', draw);
+
+    function draw(event) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineWidth = drawColor === 'white' ? 10 : 2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = drawColor;
+      ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
+    }
+
+    function setColor(color) {
+      drawColor = color;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+  </script>
+</body>
+</html>

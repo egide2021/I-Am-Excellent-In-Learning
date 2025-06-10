@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Number Line</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-color: #f5faff;
+    }
+
+    h1 {
+      color: #007acc;
+    }
+
+    .summary {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .speaker {
+      cursor: pointer;
+      font-size: 20px;
+      margin-left: 8px;
+      color: #007acc;
+    }
+
+    #numberLineCanvas {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      background: white;
+    }
+
+    #drawingCanvas {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      display: block;
+      background: #fff;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background-color: #007acc;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📏 Number Line (0–100)</h1>
+
+  <div class="summary">
+    <span>This number line helps you count, skip count, and understand number order.</span>
+    <span class="speaker" onclick="speakText('This number line helps you count, skip count, and understand number order.')">🔊</span>
+  </div>
+
+  <canvas id="numberLineCanvas" width="900" height="100"></canvas>
+
+  <canvas id="drawingCanvas" width="900" height="200"></canvas><br />
+  <button onclick="clearCanvas()">🧽 Erase Drawing</button>
+  <button onclick="window.print()">🖨️ Print This Page</button>
+
+  <script>
+    // Draw Number Line
+    const numCanvas = document.getElementById("numberLineCanvas");
+    const numCtx = numCanvas.getContext("2d");
+
+    function drawNumberLine(start = 0, end = 100, step = 10) {
+      const width = numCanvas.width;
+      const height = numCanvas.height;
+      const padding = 40;
+      const lineY = height / 2;
+      const tickHeight = 15;
+      const totalSteps = end - start;
+      const gap = (width - 2 * padding) / totalSteps;
+
+      // Draw base line
+      numCtx.beginPath();
+      numCtx.moveTo(padding, lineY);
+      numCtx.lineTo(width - padding, lineY);
+      numCtx.stroke();
+
+      // Draw ticks and numbers
+      for (let i = start; i <= end; i++) {
+        const x = padding + (i - start) * gap;
+
+        // Ticks
+        numCtx.beginPath();
+        numCtx.moveTo(x, lineY - tickHeight / 2);
+        numCtx.lineTo(x, lineY + tickHeight / 2);
+        numCtx.stroke();
+
+        // Labels every 5 numbers
+        if (i % 5 === 0) {
+          numCtx.fillText(i, x - 5, lineY + 25);
+        }
+      }
+    }
+
+    drawNumberLine(0, 100, 1);
+
+    // Drawing canvas
+    const drawCanvas = document.getElementById("drawingCanvas");
+    const drawCtx = drawCanvas.getContext("2d");
+    let drawing = false;
+
+    drawCanvas.addEventListener("mousedown", () => drawing = true);
+    drawCanvas.addEventListener("mouseup", () => {
+      drawing = false;
+      drawCtx.beginPath();
+    });
+    drawCanvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      drawCtx.lineWidth = 2;
+      drawCtx.lineCap = "round";
+      drawCtx.strokeStyle = "red";
+      drawCtx.lineTo(e.offsetX, e.offsetY);
+      drawCtx.stroke();
+      drawCtx.beginPath();
+      drawCtx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function clearCanvas() {
+      drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+    }
+
+    // Audio
+    function speakText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    }
+  </script>
+
+</body>
+</html>

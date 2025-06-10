@@ -2,72 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Measurement and Data Test</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      text-align: center;
+      background: #f0f8ff;
       padding: 20px;
-    }
-
-    main {
-      background: #fff;
-      padding: 20px;
-      max-width: 700px;
-      margin: 0 auto;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: auto;
     }
 
     h1 {
+      text-align: center;
       color: #007acc;
     }
 
     .question {
       margin-bottom: 20px;
-      text-align: left;
     }
 
-    .question input {
-      margin-top: 5px;
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"], input[type="number"] {
       width: 100%;
       padding: 8px;
       font-size: 16px;
+      margin-bottom: 10px;
     }
 
     button {
+      display: block;
+      margin: 20px auto;
       padding: 10px 20px;
-      font-size: 16px;
-      background: #007acc;
+      font-size: 18px;
+      background-color: #007acc;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
     }
+
+    #result {
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+      margin-top: 20px;
+    }
+
+    #lastScore {
+      text-align: center;
+      margin-top: 10px;
+      color: green;
+    }
   </style>
 </head>
 <body>
-  <main>
-    <h1>📏 Measurement and Data Test</h1>
 
-    <div class="question">
-      <p>1. Which object is longer: a pencil or a paperclip?</p>
-      <input type="text" />
-    </div>
+  <h1>📏 Measurement and Data Test</h1>
 
-    <div class="question">
-      <p>2. What time is shown on a clock with the short hand on 3 and the long hand on 12?</p>
-      <input type="text" />
-    </div>
+  <form id="quizForm"></form>
 
-    <div class="question">
-      <p>3. Sort these by length from shortest to longest: rope, ribbon, stick</p>
-      <input type="text" />
-    </div>
+  <button onclick="submitTest()">Submit Test</button>
 
-    <button onclick="alert('✅ Your answers have been recorded!')">Submit Test</button>
-  </main>
+  <div id="result"></div>
+  <div id="lastScore"></div>
+
+  <script>
+    const questions = [
+      { q: "Which is longer: a pencil or a crayon?", a: "pencil" },
+      { q: "How many blocks long is your shoe?", a: "" },
+      { q: "What time is it if the short hand is on 3 and the long hand is on 12?", a: "3:00" },
+      { q: "What object is heavier: a book or a balloon?", a: "book" },
+      { q: "What tool do we use to measure length?", a: "ruler" },
+      { q: "Is a paperclip longer than a crayon? (yes or no)", a: "no" },
+      { q: "Which container holds more: a cup or a bottle?", a: "bottle" },
+      { q: "What time is it if the short hand is on 6 and the long hand is on 12?", a: "6:00" },
+      { q: "Which is lighter: a feather or a shoe?", a: "feather" },
+      { q: "Draw or name something that is about 1 foot long.", a: "" }
+    ];
+
+    const form = document.getElementById("quizForm");
+
+    function loadQuiz() {
+      form.innerHTML = "";
+      questions.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `
+          <label>${index + 1}. ${item.q}</label>
+          <input type="text" id="q${index}" />
+        `;
+        form.appendChild(div);
+      });
+
+      const saved = localStorage.getItem("measurementTestScore");
+      if (saved) {
+        document.getElementById("lastScore").innerText = "Last Score: " + saved + "%";
+      }
+    }
+
+    function submitTest() {
+      let score = 0;
+      questions.forEach((item, index) => {
+        const userAnswer = document.getElementById(`q${index}`).value.trim().toLowerCase();
+        const correctAnswer = item.a.trim().toLowerCase();
+        if (correctAnswer && userAnswer === correctAnswer) score++;
+      });
+
+      const percent = Math.round((score / questions.length) * 100);
+      document.getElementById("result").innerText = `✅ You scored ${percent}% (${score}/${questions.length})`;
+
+      localStorage.setItem("measurementTestScore", percent);
+    }
+
+    window.onload = loadQuiz;
+  </script>
+
 </body>
 </html>
